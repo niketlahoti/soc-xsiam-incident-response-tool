@@ -144,18 +144,6 @@
             background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px;
         }
         
-        .severity-breakdown {
-            display: flex; gap: 8px; margin-top: 12px;
-        }
-        
-        .severity-item {
-            flex: 1; text-align: center; padding: 8px;
-            background: rgba(255,255,255,0.05); border-radius: 6px;
-        }
-        
-        .severity-item .count { font-size: 20px; font-weight: bold; }
-        .severity-item .label { font-size: 10px; margin-top: 4px; }
-        
         .critical { color: #dc3545; }
         .high { color: #fd7e14; }
         .medium { color: #ffc107; }
@@ -262,11 +250,6 @@
         .status-dot.online { background: var(--success); }
         .status-dot.offline { background: var(--danger); }
         
-        .cors-notice {
-            background: rgba(255,193,7,0.2); padding: 15px; border-radius: 8px;
-            border-left: 4px solid var(--warning); margin-bottom: 15px;
-        }
-        
         @media (max-width: 1200px) {
             .two-column { grid-template-columns: 1fr; }
         }
@@ -290,37 +273,16 @@
 
         <div id="alert-container"></div>
 
-        <!-- CORS Notice -->
-        <div class="cors-notice">
-            <strong>⚠️ CORS Configuration Required:</strong>
-            <p style="margin-top: 8px; font-size: 12px;">
-                Due to browser CORS restrictions, direct API calls from GitHub Pages to XSIAM are blocked. 
-                <strong>Solutions:</strong>
-            </p>
-            <ul style="margin-top: 8px; font-size: 11px; margin-left: 20px;">
-                <li><strong>Option 1:</strong> Use CORS proxy: <code>https://corsproxy.io/?</code> (prepend to API URL)</li>
-                <li><strong>Option 2:</strong> Deploy backend proxy server (recommended for production)</li>
-                <li><strong>Option 3:</strong> Use browser extension like "CORS Unblock" for testing</li>
-                <li><strong>Option 4:</strong> Configure XSIAM CORS settings (if available)</li>
-            </ul>
-            <div style="margin-top: 10px;">
-                <label style="font-size: 12px; font-weight: 600;">
-                    <input type="checkbox" id="useCorsProxy" onchange="toggleCorsProxy()" checked>
-                    Use CORS Proxy (corsproxy.io)
-                </label>
-            </div>
-        </div>
-
         <!-- Auto-Sync Controls -->
         <div class="sync-controls">
             <div class="sync-status">
                 <div class="sync-indicator" id="syncIndicator"></div>
                 <span style="font-weight: 600; font-size: 13px;">Auto-Sync:</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="autoSyncToggle" onchange="toggleAutoSync()">
+                    <input type="checkbox" id="autoSyncToggle" checked onchange="toggleAutoSync()">
                     <span class="slider"></span>
                 </label>
-                <span id="syncStatusText" style="font-size: 12px; color: var(--danger);">Inactive</span>
+                <span id="syncStatusText" style="font-size: 12px; color: var(--success);">Active</span>
             </div>
             
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -341,79 +303,174 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 Dashboard</button>
+            <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 MSSP Dashboard</button>
+            <button class="tab-button" onclick="switchTab('ciso-dashboard')">📊 CISO Dashboard</button>
+            <button class="tab-button" onclick="switchTab('analyst-view')">👨‍💻 Analyst Workspace</button>
+            <button class="tab-button" onclick="switchTab('manager-view')">👔 SOC Manager</button>
             <button class="tab-button" onclick="switchTab('incidents')">🚨 Incidents</button>
+            <button class="tab-button" onclick="switchTab('threat-intel')">🔍 Threat Intel</button>
+            <button class="tab-button" onclick="switchTab('cloud-command')">☁️ Cloud Command</button>
             <button class="tab-button" onclick="switchTab('integrations')">🔌 Integrations</button>
+            <button class="tab-button" onclick="switchTab('customers')">👥 Customers</button>
         </div>
 
         <!-- MSSP Dashboard -->
         <div id="mssp-dashboard" class="tab-content active">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">ATPL NFR - Security Overview</h2>
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Multi-Tenant Security Overview</h2>
             
             <div class="dashboard-grid">
                 <div class="widget">
-                    <div class="last-updated" id="incidentsLastUpdate">Not synced</div>
+                    <div class="last-updated" id="customersLastUpdate">Just now</div>
+                    <h3>Total Customers</h3>
+                    <div class="widget-value" id="totalCustomers">1</div>
+                    <div class="widget-label">Active Tenants</div>
+                </div>
+                <div class="widget">
+                    <div class="last-updated" id="incidentsLastUpdate">Just now</div>
                     <h3>Total Incidents</h3>
                     <div class="widget-value" id="totalIncidents">-</div>
                     <div class="widget-label">From XSIAM</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="criticalLastUpdate">Not synced</div>
+                    <div class="last-updated" id="criticalLastUpdate">Just now</div>
                     <h3>Critical Alerts</h3>
                     <div class="widget-value critical" id="criticalAlerts">-</div>
                     <div class="widget-label">High Priority</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="highLastUpdate">Not synced</div>
-                    <h3>High Severity</h3>
-                    <div class="widget-value high" id="highAlerts">-</div>
-                    <div class="widget-label">Requires Attention</div>
-                </div>
-                <div class="widget">
-                    <div class="last-updated" id="mediumLastUpdate">Not synced</div>
-                    <h3>Medium Severity</h3>
-                    <div class="widget-value medium" id="mediumAlerts">-</div>
-                    <div class="widget-label">Monitor</div>
+                    <div class="last-updated" id="automationLastUpdate">Just now</div>
+                    <h3>Automation Rate</h3>
+                    <div class="widget-value" style="color: var(--success);">82%</div>
+                    <div class="widget-label">Auto-Resolved</div>
                 </div>
             </div>
 
-            <h3 style="margin: 20px 0 12px; color: var(--primary); font-size: 16px;">Active Customer</h3>
+            <h3 style="margin: 20px 0 12px; color: var(--primary); font-size: 16px;">Customer Tenants</h3>
             <div id="customersList"></div>
+        </div>
+
+        <!-- CISO Dashboard -->
+        <div id="ciso-dashboard" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">CISO Executive Dashboard - ATPL NFR</h2>
+            <div class="dashboard-grid">
+                <div style="background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0,102,204,0.1) 100%); padding: 18px; border-radius: 8px; text-align: center; border: 2px solid var(--border);">
+                    <div style="font-size: 36px; font-weight: bold; color: var(--primary); margin-bottom: 5px;">2.3h</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Mean Time to Respond</div>
+                    <div style="font-size: 11px; margin-top: 6px; color: var(--success);">↓ 15% vs last month</div>
+                </div>
+                <div style="background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0,102,204,0.1) 100%); padding: 18px; border-radius: 8px; text-align: center; border: 2px solid var(--border);">
+                    <div style="font-size: 36px; font-weight: bold; color: var(--primary); margin-bottom: 5px;">82%</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Auto-Resolved Rate</div>
+                    <div style="font-size: 11px; margin-top: 6px; color: var(--success);">↑ 8% improvement</div>
+                </div>
+                <div style="background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0,102,204,0.1) 100%); padding: 18px; border-radius: 8px; text-align: center; border: 2px solid var(--border);">
+                    <div style="font-size: 36px; font-weight: bold; color: var(--primary); margin-bottom: 5px;">94%</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">SOC Efficiency</div>
+                    <div style="font-size: 11px; margin-top: 6px; color: var(--success);">↑ 12% vs manual</div>
+                </div>
+                <div style="background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0,102,204,0.1) 100%); padding: 18px; border-radius: 8px; text-align: center; border: 2px solid var(--border);">
+                    <div style="font-size: 36px; font-weight: bold; color: var(--primary); margin-bottom: 5px;">78%</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">MITRE Coverage</div>
+                    <div style="font-size: 11px; margin-top: 6px; color: var(--success);">↑ 5% this quarter</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analyst Workspace -->
+        <div id="analyst-view" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">SOC Analyst Workspace - ATPL NFR</h2>
+            <div class="two-column">
+                <div class="form-section">
+                    <h3>📋 My Queue</h3>
+                    <div id="analystQueue" style="max-height: 600px; overflow-y: auto;"></div>
+                </div>
+                <div class="form-section">
+                    <h3>🤖 AI-Powered Analysis</h3>
+                    <div id="aiAnalysisPanel">
+                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">Select an incident to view AI analysis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOC Manager View -->
+        <div id="manager-view" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">SOC Manager Dashboard - ATPL NFR</h2>
+            <div class="dashboard-grid">
+                <div class="widget">
+                    <h3>Team Performance</h3>
+                    <div class="widget-value">94%</div>
+                    <div class="widget-label">SLA Compliance</div>
+                </div>
+                <div class="widget">
+                    <h3>Pending Cases</h3>
+                    <div class="widget-value">23</div>
+                    <div class="widget-label">In Queue</div>
+                </div>
+                <div class="widget">
+                    <h3>Avg Resolution Time</h3>
+                    <div class="widget-value">2.3h</div>
+                    <div class="widget-label">MTTR</div>
+                </div>
+                <div class="widget">
+                    <h3>Analyst Efficiency</h3>
+                    <div class="widget-value">87%</div>
+                    <div class="widget-label">Productivity Score</div>
+                </div>
+            </div>
         </div>
 
         <!-- Incidents Tab -->
         <div id="incidents" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                Live Incidents - ATPL NFR
-            </h2>
-            
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Live Incidents - ATPL NFR</h2>
             <div class="two-column">
                 <div class="form-section">
                     <h3>📋 Open Incidents (<span id="incidentCount">0</span>)</h3>
                     <div id="incidentsList" style="max-height: 600px; overflow-y: auto;">
-                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            Click "Fetch Live Cases" to load incidents
-                        </p>
+                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">Click "Fetch Live Cases" to load incidents</p>
                     </div>
                 </div>
-
                 <div class="form-section">
                     <h3>🤖 AI Analysis & Details</h3>
                     <div id="analysisResults">
-                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            Select an incident to view details
-                        </p>
+                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">Select an incident to view details</p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threat Intel -->
+        <div id="threat-intel" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">🔍 Threat Intelligence Feed</h2>
+            <div class="form-section">
+                <h3>🚨 Critical Threats (Last 7 Days)</h3>
+                <div style="background: rgba(220,53,69,0.1); padding: 15px; border-radius: 6px; border-left: 3px solid var(--danger); margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 5px;">CVE-2025-12345: Critical RCE in Apache Struts</div>
+                    <div style="font-size: 11px; color: var(--text-secondary);">Severity: Critical | CVSS: 9.8 | Published: 2 days ago</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cloud Command -->
+        <div id="cloud-command" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">☁️ Cloud Command Center - ATPL NFR</h2>
+            <div class="dashboard-grid">
+                <div class="widget">
+                    <h3>AWS Assets</h3>
+                    <div class="widget-value">342</div>
+                    <div class="widget-label">Total Resources</div>
+                </div>
+                <div class="widget">
+                    <h3>Azure Assets</h3>
+                    <div class="widget-value">218</div>
+                    <div class="widget-label">Total Resources</div>
                 </div>
             </div>
         </div>
 
         <!-- Integrations Tab -->
         <div id="integrations" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                Integration Health - ATPL NFR
-            </h2>
-
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Integration Health - ATPL NFR</h2>
             <div class="form-section">
                 <h3>🔌 XSIAM Connection Status</h3>
                 <div class="data-source-item">
@@ -435,22 +492,21 @@
                     <span style="font-weight: 600;">Total Incidents Retrieved</span>
                     <span id="totalRetrieved">0</span>
                 </div>
-                <div class="data-source-item">
-                    <span style="font-weight: 600;">CORS Proxy</span>
-                    <span id="corsProxyStatus">Enabled</span>
+            </div>
+            <div class="form-section">
+                <h3>📝 Last Error</h3>
+                <div style="background: rgba(220,53,69,0.1); padding: 15px; border-radius: 6px; font-family: monospace; font-size: 11px;">
+                    <span id="lastError">None</span>
                 </div>
             </div>
+        </div>
 
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Customer Management</h2>
             <div class="form-section">
-                <h3>📝 API Request Details</h3>
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px; font-family: monospace; font-size: 11px; overflow-x: auto;">
-                    <div><strong>Endpoint:</strong> <span id="apiEndpointDisplay">-</span></div>
-                    <div style="margin-top: 8px;"><strong>Method:</strong> POST</div>
-                    <div style="margin-top: 8px;"><strong>Headers:</strong></div>
-                    <div style="margin-left: 15px;">x-xdr-auth-id: 10</div>
-                    <div style="margin-left: 15px;">Authorization: gyljBCKp2Nv...</div>
-                    <div style="margin-top: 8px;"><strong>Last Error:</strong> <span id="lastError" style="color: var(--danger);">None</span></div>
-                </div>
+                <h3>💼 Active Customers</h3>
+                <div id="savedCustomersList"></div>
             </div>
         </div>
     </div>
@@ -462,27 +518,22 @@
                 <h2 style="color: var(--primary); font-size: 18px;">➕ Onboard New Customer</h2>
                 <button class="btn btn-danger" onclick="closeOnboardModal()">✕</button>
             </div>
-            
             <div style="margin-bottom: 12px;">
                 <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">Customer Name *</label>
                 <input type="text" id="onboardName" placeholder="Company Name" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
-            
             <div style="margin-bottom: 12px;">
                 <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">XSIAM API URL *</label>
                 <input type="url" id="onboardXsiamUrl" placeholder="https://api-xxx.xdr.paloaltonetworks.com" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
-            
             <div style="margin-bottom: 12px;">
                 <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">API Key ID *</label>
                 <input type="text" id="onboardApiKeyId" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
-            
             <div style="margin-bottom: 12px;">
                 <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">API Key *</label>
                 <input type="password" id="onboardApiKey" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
-            
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-success" onclick="onboardCustomer()">✓ Onboard</button>
                 <button class="btn btn-danger" onclick="closeOnboardModal()">✕ Cancel</button>
@@ -491,16 +542,13 @@
     </div>
 
     <script>
-        // Global state
         let customers = {};
         let currentTenant = 'atpl-nfr';
-        let autoSyncEnabled = false;
+        let autoSyncEnabled = true;
         let syncInterval = 30;
         let syncTimer = null;
         let incidents = [];
-        let useCorsProxy = true;
 
-        // Default ATPL NFR customer
         const defaultCustomer = {
             id: 'atpl-nfr',
             name: 'ATPL NFR Environment',
@@ -511,7 +559,6 @@
             onboardedDate: new Date().toISOString()
         };
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
@@ -533,24 +580,9 @@
 
             loadCustomers();
             displayCustomersList();
-            updateApiEndpointDisplay();
-        }
-
-        function toggleCorsProxy() {
-            useCorsProxy = document.getElementById('useCorsProxy').checked;
-            document.getElementById('corsProxyStatus').textContent = useCorsProxy ? 'Enabled' : 'Disabled';
-            updateApiEndpointDisplay();
-            showAlert(useCorsProxy ? 'CORS proxy enabled' : 'CORS proxy disabled', 'info');
-        }
-
-        function updateApiEndpointDisplay() {
-            const customer = customers[currentTenant];
-            if (customer) {
-                const endpoint = useCorsProxy 
-                    ? `https://corsproxy.io/?${encodeURIComponent(customer.apiUrl + '/public_api/v1/incidents/get_incidents/')}`
-                    : customer.apiUrl + '/public_api/v1/incidents/get_incidents/';
-                document.getElementById('apiEndpointDisplay').textContent = endpoint;
-            }
+            displaySavedCustomers();
+            startAutoSync();
+            fetchLiveCases();
         }
 
         function toggleAutoSync() {
@@ -578,7 +610,6 @@
             if (autoSyncEnabled) {
                 stopAutoSync();
                 startAutoSync();
-                showAlert(`Sync interval updated to ${syncInterval} seconds`, 'info');
             }
         }
 
@@ -598,10 +629,7 @@
 
         async function fetchLiveCases() {
             const customer = customers[currentTenant];
-            if (!customer) {
-                showAlert('No customer selected', 'danger');
-                return;
-            }
+            if (!customer) return;
 
             const now = new Date();
             document.getElementById('lastSyncTime').textContent = now.toLocaleTimeString();
@@ -609,47 +637,42 @@
             try {
                 showAlert('Fetching live cases from XSIAM...', 'info');
                 
-                let apiUrl = customer.apiUrl + '/public_api/v1/incidents/get_incidents/';
-                
-                // Use CORS proxy if enabled
-                if (useCorsProxy) {
-                    apiUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-                }
+                const nonce = Date.now().toString();
+                const authKey = customer.apiKey + nonce;
+                const encoder = new TextEncoder();
+                const data = encoder.encode(authKey);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                const apiUrl = `${customer.apiUrl}/public_api/v1/incidents/get_incidents/`;
                 
                 const requestBody = {
                     request_data: {
                         filters: [],
                         search_from: 0,
-                        search_to: 100,
-                        sort: {
-                            field: "creation_time",
-                            keyword: "desc"
-                        }
+                        search_to: 100
                     }
                 };
-
-                console.log('Fetching from:', apiUrl);
-                console.log('Request body:', requestBody);
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'x-xdr-auth-id': customer.apiKeyId,
-                        'Authorization': customer.apiKey
+                        'x-xdr-nonce': nonce,
+                        'x-xdr-timestamp': Date.now().toString(),
+                        'Authorization': hashHex
                     },
                     body: JSON.stringify(requestBody)
                 });
 
-                console.log('Response status:', response.status);
-
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(`API Error: ${response.status} - ${errorText}`);
+                    throw new Error(`API Error ${response.status}: ${errorText}`);
                 }
 
                 const data = await response.json();
-                console.log('Response data:', data);
                 
                 if (data.reply && data.reply.incidents) {
                     incidents = data.reply.incidents;
@@ -662,20 +685,14 @@
                     document.getElementById('totalRetrieved').textContent = incidents.length;
                     document.getElementById('lastError').textContent = 'None';
                 } else {
-                    throw new Error('Invalid response format from XSIAM API');
+                    throw new Error('Invalid response format');
                 }
 
             } catch (error) {
-                console.error('Error fetching incidents:', error);
+                console.error('Error:', error);
                 updateConnectionStatus(false);
                 document.getElementById('lastError').textContent = error.message;
-                
-                let errorMsg = error.message;
-                if (error.message.includes('Failed to fetch')) {
-                    errorMsg = 'CORS Error: Unable to connect. Try enabling CORS proxy or use browser extension.';
-                }
-                
-                showAlert(`❌ ${errorMsg}`, 'danger');
+                showAlert(`❌ ${error.message}`, 'danger');
             }
 
             updateLastUpdatedTimes();
@@ -700,25 +717,24 @@
 
         function updateDashboard() {
             const criticalCount = incidents.filter(i => i.severity === 'high' || i.severity === 'critical').length;
-            const highCount = incidents.filter(i => i.severity === 'high').length;
-            const mediumCount = incidents.filter(i => i.severity === 'medium').length;
             
             document.getElementById('totalIncidents').textContent = incidents.length;
             document.getElementById('criticalAlerts').textContent = criticalCount;
-            document.getElementById('highAlerts').textContent = highCount;
-            document.getElementById('mediumAlerts').textContent = mediumCount;
         }
 
         function displayIncidents() {
             const container = document.getElementById('incidentsList');
+            const queueContainer = document.getElementById('analystQueue');
             document.getElementById('incidentCount').textContent = incidents.length;
             
             if (incidents.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No incidents found in XSIAM</p>';
+                const msg = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No incidents found</p>';
+                container.innerHTML = msg;
+                if (queueContainer) queueContainer.innerHTML = msg;
                 return;
             }
             
-            container.innerHTML = incidents.map(inc => {
+            const html = incidents.map(inc => {
                 const creationTime = new Date(inc.creation_time).toLocaleString();
                 
                 return `
@@ -727,71 +743,33 @@
                             <strong>${inc.incident_id || 'N/A'}</strong>
                             <span class="status-badge" style="background: rgba(220,53,69,0.2); color: var(--danger);">${inc.severity || 'Unknown'}</span>
                         </div>
-                        <div style="font-size: 12px; margin-bottom: 5px;">${inc.description || inc.alert_sources?.[0] || 'No description'}</div>
+                        <div style="font-size: 12px; margin-bottom: 5px;">${inc.description || 'No description'}</div>
                         <div style="font-size: 10px; color: var(--text-secondary);">
-                            Created: ${creationTime} | Status: ${inc.status || 'Unknown'}
+                            Created: ${creationTime}
                         </div>
                     </div>
                 `;
             }).join('');
+            
+            container.innerHTML = html;
+            if (queueContainer) queueContainer.innerHTML = html;
         }
 
         function showIncidentDetails(incident) {
-            const panel = document.getElementById('analysisResults');
-            
+            const panel = document.getElementById('analysisResults') || document.getElementById('aiAnalysisPanel');
             const creationTime = new Date(incident.creation_time).toLocaleString();
-            const modificationTime = incident.modification_time ? new Date(incident.modification_time).toLocaleString() : 'N/A';
             
             panel.innerHTML = `
                 <div style="background: rgba(23,162,184,0.1); padding: 20px; border-radius: 8px; border: 2px solid var(--info);">
-                    <h4 style="color: var(--info); margin-bottom: 15px;">📋 Incident Details: ${incident.incident_id}</h4>
-                    
+                    <h4 style="color: var(--info); margin-bottom: 15px;">📋 Incident: ${incident.incident_id}</h4>
                     <div style="margin-bottom: 15px;">
-                        <strong>Severity:</strong> <span class="${incident.severity === 'high' ? 'critical' : incident.severity}">${incident.severity || 'Unknown'}</span><br>
-                        <strong>Status:</strong> ${incident.status || 'Unknown'}<br>
-                        <strong>Created:</strong> ${creationTime}<br>
-                        <strong>Modified:</strong> ${modificationTime}
+                        <strong>Severity:</strong> ${incident.severity}<br>
+                        <strong>Status:</strong> ${incident.status}<br>
+                        <strong>Created:</strong> ${creationTime}
                     </div>
-                    
                     <div style="margin-bottom: 15px;">
-                        <strong>📝 Description:</strong>
-                        <p style="margin-top: 8px; font-size: 12px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
-                            ${incident.description || 'No description available'}
-                        </p>
-                    </div>
-                    
-                    ${incident.alert_sources && incident.alert_sources.length > 0 ? `
-                    <div style="margin-bottom: 15px;">
-                        <strong>🔍 Alert Sources:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">
-                            ${incident.alert_sources.join(', ')}
-                        </p>
-                    </div>
-                    ` : ''}
-                    
-                    ${incident.hosts && incident.hosts.length > 0 ? `
-                    <div style="margin-bottom: 15px;">
-                        <strong>💻 Affected Hosts:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">
-                            ${incident.hosts.join(', ')}
-                        </p>
-                    </div>
-                    ` : ''}
-                    
-                    ${incident.users && incident.users.length > 0 ? `
-                    <div style="margin-bottom: 15px;">
-                        <strong>👤 Affected Users:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">
-                            ${incident.users.join(', ')}
-                        </p>
-                    </div>
-                    ` : ''}
-                    
-                    <div style="margin-bottom: 15px;">
-                        <strong>📊 Raw Data:</strong>
-                        <p style="margin-top: 8px; font-size: 11px; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; max-height: 200px; overflow-y: auto;">
-                            ${JSON.stringify(incident, null, 2)}
-                        </p>
+                        <strong>Description:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">${incident.description || 'N/A'}</p>
                     </div>
                 </div>
             `;
@@ -799,10 +777,10 @@
 
         function updateLastUpdatedTimes() {
             const now = new Date().toLocaleTimeString();
+            document.getElementById('customersLastUpdate').textContent = now;
             document.getElementById('incidentsLastUpdate').textContent = now;
             document.getElementById('criticalLastUpdate').textContent = now;
-            document.getElementById('highLastUpdate').textContent = now;
-            document.getElementById('mediumLastUpdate').textContent = now;
+            document.getElementById('automationLastUpdate').textContent = now;
         }
 
         function loadCustomers() {
@@ -814,10 +792,7 @@
                 if (customer.status === 'active') {
                     const option = document.createElement('option');
                     option.value = id;
-                    option.textContent = customer.name;
-                    if (id === 'atpl-nfr') {
-                        option.textContent = '🏢 ' + customer.name + ' (Default)';
-                    }
+                    option.textContent = '🏢 ' + customer.name + (id === 'atpl-nfr' ? ' (Default)' : '');
                     selector.appendChild(option);
                 }
             });
@@ -829,10 +804,7 @@
             const container = document.getElementById('customersList');
             const customer = customers[currentTenant];
             
-            if (!customer) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customer selected</p>';
-                return;
-            }
+            if (!customer) return;
             
             container.innerHTML = `
                 <div class="customer-card">
@@ -841,13 +813,23 @@
                         <span class="status-badge status-active">Active</span>
                     </div>
                     <div style="margin-top: 12px; font-size: 11px; color: var(--text-secondary);">
-                        <strong>API Endpoint:</strong> ${customer.apiUrl}<br>
-                        <strong>API Key ID:</strong> ${customer.apiKeyId}<br>
-                        <strong>Onboarded:</strong> ${new Date(customer.onboardedDate).toLocaleDateString()}<br>
-                        <strong>Status:</strong> Ready to connect
+                        <strong>API:</strong> ${customer.apiUrl}<br>
+                        <strong>Onboarded:</strong> ${new Date(customer.onboardedDate).toLocaleDateString()}
                     </div>
                 </div>
             `;
+        }
+
+        function displaySavedCustomers() {
+            const container = document.getElementById('savedCustomersList');
+            const activeCustomers = Object.values(customers).filter(c => c.status === 'active');
+            
+            container.innerHTML = activeCustomers.map(c => `
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+                    <strong>${c.name}</strong><br>
+                    <span style="font-size: 11px; color: var(--text-secondary);">${c.apiUrl}</span>
+                </div>
+            `).join('');
         }
 
         function switchTab(tabId) {
@@ -860,7 +842,7 @@
         function switchTenant() {
             currentTenant = document.getElementById('tenantSelector').value;
             displayCustomersList();
-            updateApiEndpointDisplay();
+            fetchLiveCases();
         }
 
         function showOnboardModal() {
@@ -878,33 +860,23 @@
             const apiKey = document.getElementById('onboardApiKey').value;
             
             if (!name || !apiUrl || !apiKeyId || !apiKey) {
-                showAlert('Please fill in all required fields', 'danger');
+                showAlert('Please fill all fields', 'danger');
                 return;
             }
             
             const id = name.toLowerCase().replace(/\s+/g, '-');
-            
             customers[id] = {
-                id,
-                name,
-                apiUrl,
-                apiKeyId,
-                apiKey,
+                id, name, apiUrl, apiKeyId, apiKey,
                 status: 'active',
                 onboardedDate: new Date().toISOString()
             };
             
             localStorage.setItem('mssp_customers', JSON.stringify(customers));
-            
             loadCustomers();
             displayCustomersList();
+            displaySavedCustomers();
             closeOnboardModal();
-            showAlert(`Customer "${name}" onboarded successfully!`, 'success');
-            
-            document.getElementById('onboardName').value = '';
-            document.getElementById('onboardXsiamUrl').value = '';
-            document.getElementById('onboardApiKeyId').value = '';
-            document.getElementById('onboardApiKey').value = '';
+            showAlert(`Customer "${name}" onboarded!`, 'success');
         }
 
         function showAlert(message, type) {
@@ -916,7 +888,7 @@
             setTimeout(() => {
                 alert.classList.remove('show');
                 setTimeout(() => alert.remove(), 300);
-            }, 5000);
+            }, 4000);
         }
     </script>
 </body>

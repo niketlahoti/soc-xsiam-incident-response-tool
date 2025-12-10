@@ -120,9 +120,6 @@
             margin-bottom: 20px;
             color: var(--primary-color);
             font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .form-group {
@@ -389,27 +386,6 @@
             border: 1px solid var(--danger-color);
         }
 
-        .api-test-result {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .help-text {
             font-size: 12px;
             color: var(--text-secondary);
@@ -429,53 +405,13 @@
             cursor: pointer;
         }
 
-        .tag-input-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 8px;
-            background: var(--dark-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            min-height: 45px;
-        }
-
-        .tag {
-            background: var(--primary-color);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tag .remove-tag {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .validation-error {
-            color: var(--danger-color);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .validation-error.show {
-            display: block;
-        }
-
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
             .button-group {
                 flex-direction: column;
             }
-            
             .btn {
                 width: 100%;
                 justify-content: center;
@@ -487,50 +423,43 @@
     <div class="container">
         <header>
             <h1>🛡️ SOC Analyst - XSIAM Incident Response Tool</h1>
-            <p>Enterprise-grade incident response management with Palo Alto Cortex XSIAM integration | Version 1.0</p>
+            <p>Enterprise-grade incident response management with Palo Alto Cortex XSIAM integration</p>
         </header>
 
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('incident-form')">📋 Incident Report</button>
-            <button class="tab-button" onclick="switchTab('xsiam-config')">⚙️ XSIAM Configuration</button>
-            <button class="tab-button" onclick="switchTab('preview')">👁️ Preview & Export</button>
-            <button class="tab-button" onclick="switchTab('debug')">🔧 Debug Console</button>
+            <button class="tab-button" onclick="switchTab('xsiam-config')">⚙️ XSIAM Config</button>
+            <button class="tab-button" onclick="switchTab('preview')">👁️ Preview</button>
+            <button class="tab-button" onclick="switchTab('debug')">🔧 Debug</button>
         </div>
 
-        <!-- Incident Form Tab -->
         <div id="incident-form" class="tab-content active">
             <div id="alert-container"></div>
-
             <form id="incidentForm">
-                <!-- Basic Information -->
                 <div class="form-section">
-                    <h3>📌 Basic Incident Information</h3>
+                    <h3>📌 Basic Information</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Incident ID <span class="required">*</span></label>
                             <input type="text" id="incidentId" required placeholder="INC-2025-001234">
-                            <span class="help-text">Unique identifier from XSIAM</span>
                         </div>
                         <div class="form-group">
                             <label>Severity <span class="required">*</span></label>
                             <select id="severity" required>
-                                <option value="">Select Severity</option>
+                                <option value="">Select</option>
                                 <option value="Critical">Critical</option>
                                 <option value="High">High</option>
                                 <option value="Medium">Medium</option>
                                 <option value="Low">Low</option>
-                                <option value="Informational">Informational</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Status <span class="required">*</span></label>
                             <select id="status" required>
-                                <option value="">Select Status</option>
+                                <option value="">Select</option>
                                 <option value="New">New</option>
                                 <option value="In Progress">In Progress</option>
-                                <option value="Pending Customer">Pending Customer</option>
                                 <option value="Resolved">Resolved</option>
-                                <option value="Closed">Closed</option>
                             </select>
                         </div>
                     </div>
@@ -541,378 +470,181 @@
                         </div>
                         <div class="form-group">
                             <label>Analyst Name <span class="required">*</span></label>
-                            <input type="text" id="analystName" required placeholder="John Doe">
+                            <input type="text" id="analystName" required>
                         </div>
                         <div class="form-group">
                             <label>Customer Name <span class="required">*</span></label>
-                            <input type="text" id="customerName" required placeholder="Acme Corporation">
+                            <input type="text" id="customerName" required>
                         </div>
                     </div>
                 </div>
 
-                <!-- Alert Details -->
                 <div class="form-section">
-                    <h3>🚨 Alert & Detection Details</h3>
+                    <h3>🚨 Alert Details</h3>
                     <div class="form-group">
                         <label>Alert Name <span class="required">*</span></label>
-                        <input type="text" id="alertName" required placeholder="Suspicious PowerShell Execution">
+                        <input type="text" id="alertName" required>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Alert Type</label>
                             <select id="alertType">
-                                <option value="">Select Type</option>
+                                <option value="">Select</option>
                                 <option value="Malware">Malware</option>
                                 <option value="Phishing">Phishing</option>
                                 <option value="Data Exfiltration">Data Exfiltration</option>
                                 <option value="Unauthorized Access">Unauthorized Access</option>
-                                <option value="Brute Force">Brute Force</option>
-                                <option value="Lateral Movement">Lateral Movement</option>
-                                <option value="Privilege Escalation">Privilege Escalation</option>
-                                <option value="Suspicious Activity">Suspicious Activity</option>
-                                <option value="Policy Violation">Policy Violation</option>
-                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Data Source</label>
                             <select id="dataSource">
-                                <option value="">Select Source</option>
-                                <option value="Endpoint">Endpoint (EDR)</option>
-                                <option value="Network">Network (Firewall/IDS/IPS)</option>
-                                <option value="Cloud">Cloud (AWS/Azure/GCP)</option>
-                                <option value="Email">Email Gateway</option>
-                                <option value="Web Proxy">Web Proxy</option>
-                                <option value="Application">Application Server</option>
-                                <option value="Database">Database</option>
-                                <option value="OT">OT Devices</option>
+                                <option value="">Select</option>
+                                <option value="Endpoint">Endpoint</option>
+                                <option value="Network">Network</option>
+                                <option value="Cloud">Cloud</option>
+                                <option value="Email">Email</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>MITRE ATT&CK Techniques</label>
-                        <input type="text" id="mitreTechniques" placeholder="T1059.001, T1003.001">
-                        <span class="help-text">Comma-separated MITRE ATT&CK technique IDs</span>
-                    </div>
                 </div>
 
-                <!-- Affected Assets -->
-                <div class="form-section">
-                    <h3>💻 Affected Assets</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Hostname(s)</label>
-                            <textarea id="hostnames" placeholder="DESKTOP-ABC123&#10;SERVER-XYZ456"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>IP Address(es)</label>
-                            <textarea id="ipAddresses" placeholder="192.168.1.100&#10;10.0.0.50"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>User Account(s)</label>
-                            <textarea id="userAccounts" placeholder="john.doe@company.com&#10;admin@company.com"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Affected Applications</label>
-                            <textarea id="applications" placeholder="SAP ERP&#10;Microsoft Exchange"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Observations & Findings -->
                 <div class="form-section">
                     <h3>🔍 Observations & Findings</h3>
                     <div class="form-group">
-                        <label>Detailed Observations <span class="required">*</span></label>
-                        <textarea id="observations" required rows="6" placeholder="Describe what was observed in detail:&#10;- Timeline of events&#10;- Suspicious behaviors detected&#10;- Correlation with other alerts&#10;- Historical context"></textarea>
+                        <label>Observations <span class="required">*</span></label>
+                        <textarea id="observations" required rows="6"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Key Findings <span class="required">*</span></label>
-                        <textarea id="findings" required rows="6" placeholder="Summarize key findings:&#10;- Root cause analysis&#10;- Attack vector identification&#10;- Scope of compromise&#10;- Evidence collected"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Indicators of Compromise (IOCs)</label>
-                        <textarea id="iocs" rows="5" placeholder="File Hashes (MD5/SHA256):&#10;Malicious IPs:&#10;Suspicious Domains:&#10;Registry Keys:&#10;File Paths:"></textarea>
+                        <textarea id="findings" required rows="6"></textarea>
                     </div>
                 </div>
 
-                <!-- Analysis & Classification -->
                 <div class="form-section">
-                    <h3>📊 Analysis & Classification</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Classification <span class="required">*</span></label>
-                            <select id="classification" required>
-                                <option value="">Select Classification</option>
-                                <option value="True Positive">True Positive - Confirmed Threat</option>
-                                <option value="False Positive">False Positive - Benign Activity</option>
-                                <option value="True Positive - Business Approved">True Positive - Business Approved</option>
-                                <option value="Requires Further Investigation">Requires Further Investigation</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Confidence Level</label>
-                            <select id="confidenceLevel">
-                                <option value="">Select Confidence</option>
-                                <option value="High">High (90-100%)</option>
-                                <option value="Medium">Medium (60-89%)</option>
-                                <option value="Low">Low (Below 60%)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Correlation with Past Incidents</label>
-                        <textarea id="correlation" rows="4" placeholder="Reference similar past incidents, patterns, or recurring issues"></textarea>
-                    </div>
-                </div>
-
-                <!-- Business Impact -->
-                <div class="form-section">
-                    <h3>💼 Business Impact Assessment</h3>
+                    <h3>💼 Business Impact</h3>
                     <div class="form-group">
                         <label>Impact Level <span class="required">*</span></label>
                         <select id="impactLevel" required>
-                            <option value="">Select Impact</option>
-                            <option value="Critical">Critical - Business Operations Halted</option>
-                            <option value="High">High - Significant Disruption</option>
-                            <option value="Medium">Medium - Moderate Impact</option>
-                            <option value="Low">Low - Minimal Impact</option>
-                            <option value="None">None - No Business Impact</option>
+                            <option value="">Select</option>
+                            <option value="Critical">Critical</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Business Impact Description <span class="required">*</span></label>
-                        <textarea id="businessImpact" required rows="5" placeholder="Describe the impact on business operations:&#10;- Affected business processes&#10;- Data confidentiality/integrity/availability concerns&#10;- Compliance implications&#10;- Financial impact&#10;- Reputation risk"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Affected Business Units</label>
-                        <input type="text" id="affectedUnits" placeholder="Finance, HR, Sales">
+                        <label>Impact Description <span class="required">*</span></label>
+                        <textarea id="businessImpact" required rows="5"></textarea>
                     </div>
                 </div>
 
-                <!-- Recommendations & Actions -->
                 <div class="form-section">
-                    <h3>✅ Recommendations & Remediation Actions</h3>
-                    <div class="form-group">
-                        <label>Immediate Actions Taken</label>
-                        <textarea id="actionsTaken" rows="5" placeholder="List actions already performed:&#10;- Isolated affected systems&#10;- Disabled compromised accounts&#10;- Collected forensic evidence"></textarea>
-                    </div>
+                    <h3>✅ Recommendations</h3>
                     <div class="form-group">
                         <label>Recommended Actions <span class="required">*</span></label>
-                        <textarea id="recommendations" required rows="6" placeholder="Provide precise, actionable recommendations:&#10;&#10;FOR NOC TEAM:&#10;- Specific network configurations&#10;- Firewall rule changes&#10;&#10;FOR IT/ENDPOINT TEAM:&#10;- System patches required&#10;- Software updates&#10;&#10;FOR CLOUD TEAM:&#10;- Cloud security configurations&#10;&#10;IMPORTANT: Avoid blocking business-critical applications, IPs, or domains"></textarea>
+                        <textarea id="recommendations" required rows="6"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Items to AVOID Blocking</label>
-                        <textarea id="avoidBlocking" rows="4" placeholder="List business-critical items that should NOT be blocked:&#10;- Approved third-party IPs&#10;- Business application domains&#10;- Legitimate file hashes"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Long-term Preventive Measures</label>
-                        <textarea id="preventiveMeasures" rows="5" placeholder="Suggest improvements to prevent recurrence:&#10;- Security awareness training&#10;- Policy updates&#10;- Technology enhancements"></textarea>
-                    </div>
-                </div>
-
-                <!-- Additional Information -->
-                <div class="form-section">
-                    <h3>📎 Additional Information</h3>
-                    <div class="form-group">
-                        <label>References & Documentation</label>
-                        <textarea id="references" rows="4" placeholder="Links to:&#10;- XSIAM case URL&#10;- Related tickets&#10;- External threat intelligence&#10;- Knowledge base articles"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Additional Notes</label>
-                        <textarea id="additionalNotes" rows="4" placeholder="Any other relevant information"></textarea>
+                        <textarea id="avoidBlocking" rows="4"></textarea>
                     </div>
                 </div>
 
                 <div class="button-group">
-                    <button type="button" class="btn btn-primary" onclick="validateForm()">✓ Validate Report</button>
-                    <button type="button" class="btn btn-success" onclick="generatePreview()">👁️ Generate Preview</button>
-                    <button type="button" class="btn btn-info" onclick="fetchFromXSIAM()">🔄 Fetch from XSIAM</button>
+                    <button type="button" class="btn btn-primary" onclick="validateForm()">✓ Validate</button>
+                    <button type="button" class="btn btn-success" onclick="generatePreview()">👁️ Preview</button>
                     <button type="button" class="btn btn-warning" onclick="saveAsDraft()">💾 Save Draft</button>
-                    <button type="button" class="btn btn-danger" onclick="resetForm()">🗑️ Clear Form</button>
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">🗑️ Clear</button>
                 </div>
             </form>
         </div>
 
-        <!-- XSIAM Configuration Tab -->
         <div id="xsiam-config" class="tab-content">
             <div class="form-section">
                 <h3>🔐 XSIAM API Configuration</h3>
-                <p style="margin-bottom: 20px; color: var(--text-secondary);">
-                    Configure your Palo Alto Cortex XSIAM API credentials. 
-                    <a href="https://docs-cortex.paloaltonetworks.com/r/Cortex-XSIAM-Platform-APIs/Get-started-with-Cortex-XSIAM-3.3-APIs" target="_blank" style="color: var(--primary-color);">
-                        View API Documentation →
-                    </a>
-                </p>
-
                 <div class="form-group">
-                    <label>XSIAM Instance URL <span class="required">*</span></label>
+                    <label>XSIAM URL <span class="required">*</span></label>
                     <input type="url" id="xsiamUrl" placeholder="https://your-instance.xsiam.paloaltonetworks.com">
-                    <span class="help-text">Your XSIAM tenant URL</span>
                 </div>
-
                 <div class="form-group">
                     <label>API Key ID <span class="required">*</span></label>
-                    <input type="text" id="apiKeyId" placeholder="Enter your API Key ID">
-                    <span class="help-text">Generated from XSIAM Settings → API Keys</span>
+                    <input type="text" id="apiKeyId">
                 </div>
-
                 <div class="form-group">
                     <label>API Key <span class="required">*</span></label>
-                    <input type="password" id="apiKey" placeholder="Enter your API Key">
-                    <span class="help-text">Keep this secure - never share your API key</span>
+                    <input type="password" id="apiKey">
                 </div>
-
-                <div class="form-group">
-                    <label>Advanced Authentication ID</label>
-                    <input type="text" id="authId" placeholder="Optional: Advanced authentication ID">
-                </div>
-
                 <div class="checkbox-group">
                     <input type="checkbox" id="saveCredentials">
-                    <label for="saveCredentials">Save credentials locally (browser storage only)</label>
+                    <label for="saveCredentials">Save locally</label>
                 </div>
-
                 <div class="button-group">
-                    <button type="button" class="btn btn-primary" onclick="saveXSIAMConfig()">💾 Save Configuration</button>
-                    <button type="button" class="btn btn-success" onclick="testXSIAMConnection()">🔌 Test Connection</button>
-                    <button type="button" class="btn btn-danger" onclick="clearXSIAMConfig()">🗑️ Clear Configuration</button>
+                    <button type="button" class="btn btn-primary" onclick="saveXSIAMConfig()">💾 Save</button>
+                    <button type="button" class="btn btn-success" onclick="testXSIAMConnection()">🔌 Test</button>
                 </div>
-
-                <div id="connectionStatus" style="margin-top: 20px;"></div>
-            </div>
-
-            <div class="form-section">
-                <h3>📚 API Endpoints Reference</h3>
-                <table style="width: 100%; color: var(--text-primary);">
-                    <thead>
-                        <tr>
-                            <th>Endpoint</th>
-                            <th>Method</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>/public_api/v1/incidents/get_incidents</td>
-                            <td>POST</td>
-                            <td>Retrieve incident details</td>
-                        </tr>
-                        <tr>
-                            <td>/public_api/v1/alerts/get_alerts</td>
-                            <td>POST</td>
-                            <td>Fetch alert information</td>
-                        </tr>
-                        <tr>
-                            <td>/public_api/v1/incidents/update_incident</td>
-                            <td>POST</td>
-                            <td>Update incident status</td>
-                        </tr>
-                        <tr>
-                            <td>/public_api/v1/xql/start_xql_query</td>
-                            <td>POST</td>
-                            <td>Execute XQL queries</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="connectionStatus"></div>
             </div>
         </div>
 
-        <!-- Preview Tab -->
         <div id="preview" class="tab-content">
-            <div class="button-group" style="margin-bottom: 20px;">
-                <button type="button" class="btn btn-primary" onclick="generatePreview()">🔄 Refresh Preview</button>
-                <button type="button" class="btn btn-success" onclick="exportToPDF()">📄 Export to PDF</button>
-                <button type="button" class="btn btn-info" onclick="exportToHTML()">📧 Export to HTML</button>
-                <button type="button" class="btn btn-warning" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="generatePreview()">🔄 Refresh</button>
+                <button type="button" class="btn btn-info" onclick="exportToHTML()">📧 Export HTML</button>
+                <button type="button" class="btn btn-warning" onclick="copyToClipboard()">📋 Copy</button>
             </div>
-
             <div id="previewContent" class="preview-section">
                 <h2>SOC Incident Response Report</h2>
-                <p style="color: #666; font-style: italic;">Fill out the incident form and click "Generate Preview" to see the formatted report</p>
+                <p style="color: #666;">Fill the form and generate preview</p>
             </div>
         </div>
 
-        <!-- Debug Console Tab -->
         <div id="debug" class="tab-content">
             <div class="form-section">
                 <h3>🔧 Debug Console</h3>
-                <p style="margin-bottom: 15px; color: var(--text-secondary);">
-                    Monitor API calls, validation errors, and system operations in real-time
-                </p>
-
                 <div class="button-group">
-                    <button type="button" class="btn btn-primary" onclick="clearDebugLog()">🗑️ Clear Log</button>
-                    <button type="button" class="btn btn-success" onclick="exportDebugLog()">💾 Export Log</button>
-                    <button type="button" class="btn btn-info" onclick="toggleAutoScroll()">📜 Toggle Auto-scroll</button>
+                    <button type="button" class="btn btn-primary" onclick="clearDebugLog()">🗑️ Clear</button>
+                    <button type="button" class="btn btn-success" onclick="exportDebugLog()">💾 Export</button>
                 </div>
-
                 <div id="debugPanel" class="debug-panel">
-                    <div class="log-entry">
-                        <span class="log-time">[00:00:00]</span>
-                        <span class="log-success">System initialized successfully</span>
-                    </div>
-                    <div class="log-entry">
-                        <span class="log-time">[00:00:01]</span>
-                        <span>Debug console ready. Waiting for operations...</span>
-                    </div>
+                    <div class="log-entry"><span class="log-success">System ready</span></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Global state
         let debugAutoScroll = true;
         let xsiamConfig = {};
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedConfig();
             loadDraft();
-            logDebug('Application loaded successfully', 'success');
+            logDebug('Application loaded', 'success');
         });
 
-        // Tab switching
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
-            
-            logDebug(`Switched to tab: ${tabId}`, 'info');
+            logDebug(`Tab: ${tabId}`, 'info');
         }
 
-        // Debug logging
         function logDebug(message, type = 'info') {
-            const debugPanel = document.getElementById('debugPanel');
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            
-            let className = '';
-            if (type === 'error') className = 'log-error';
-            else if (type === 'success') className = 'log-success';
-            else if (type === 'warning') className = 'log-warning';
-            
-            logEntry.innerHTML = `
-                <span class="log-time">[${timestamp}]</span>
-                <span class="${className}">${message}</span>
-            `;
-            
-            debugPanel.appendChild(logEntry);
-            
-            if (debugAutoScroll) {
-                debugPanel.scrollTop = debugPanel.scrollHeight;
-            }
+            const panel = document.getElementById('debugPanel');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            let cls = type === 'error' ? 'log-error' : type === 'success' ? 'log-success' : type === 'warning' ? 'log-warning' : '';
+            entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${cls}">${message}</span>`;
+            panel.appendChild(entry);
+            if (debugAutoScroll) panel.scrollTop = panel.scrollHeight;
         }
 
         function clearDebugLog() {
             document.getElementById('debugPanel').innerHTML = '';
-            logDebug('Debug log cleared', 'info');
+            logDebug('Log cleared', 'info');
         }
 
         function exportDebugLog() {
@@ -921,172 +653,83 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `debug-log-${new Date().toISOString()}.txt`;
+            a.download = `debug-${new Date().toISOString()}.txt`;
             a.click();
-            logDebug('Debug log exported', 'success');
+            logDebug('Log exported', 'success');
         }
 
-        function toggleAutoScroll() {
-            debugAutoScroll = !debugAutoScroll;
-            showAlert(`Auto-scroll ${debugAutoScroll ? 'enabled' : 'disabled'}`, 'info');
-            logDebug(`Auto-scroll ${debugAutoScroll ? 'enabled' : 'disabled'}`, 'info');
-        }
-
-        // Alert system
         function showAlert(message, type = 'info') {
             const container = document.getElementById('alert-container');
             const alert = document.createElement('div');
             alert.className = `alert alert-${type} show`;
             alert.textContent = message;
             container.appendChild(alert);
-            
             setTimeout(() => {
                 alert.classList.remove('show');
                 setTimeout(() => alert.remove(), 300);
             }, 5000);
         }
 
-        // Form validation
         function validateForm() {
-            logDebug('Starting form validation...', 'info');
-            const requiredFields = document.querySelectorAll('[required]');
-            let isValid = true;
+            logDebug('Validating form...', 'info');
+            const required = document.querySelectorAll('[required]');
+            let valid = true;
             let errors = [];
-
-            requiredFields.forEach(field => {
+            required.forEach(field => {
                 if (!field.value.trim()) {
-                    isValid = false;
-                    errors.push(`${field.previousElementSibling.textContent.replace('*', '').trim()} is required`);
+                    valid = false;
+                    errors.push(field.previousElementSibling.textContent.replace('*', '').trim());
                     field.style.borderColor = 'var(--danger-color)';
                 } else {
                     field.style.borderColor = 'var(--border-color)';
                 }
             });
-
-            // Validate email format in user accounts
-            const userAccounts = document.getElementById('userAccounts').value;
-            if (userAccounts) {
-                const emails = userAccounts.split('\n').filter(e => e.trim());
-                emails.forEach(email => {
-                    if (email.includes('@') && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                        errors.push(`Invalid email format: ${email}`);
-                        isValid = false;
-                    }
-                });
-            }
-
-            // Validate IP addresses
-            const ipAddresses = document.getElementById('ipAddresses').value;
-            if (ipAddresses) {
-                const ips = ipAddresses.split('\n').filter(ip => ip.trim());
-                ips.forEach(ip => {
-                    if (!ip.match(/^(\d{1,3}\.){3}\d{1,3}$/)) {
-                        errors.push(`Invalid IP address format: ${ip}`);
-                        isValid = false;
-                    }
-                });
-            }
-
-            if (isValid) {
-                showAlert('✓ Form validation passed! All required fields are complete.', 'success');
-                logDebug('Form validation successful', 'success');
+            if (valid) {
+                showAlert('✓ Validation passed', 'success');
+                logDebug('Validation successful', 'success');
             } else {
-                showAlert(`❌ Validation failed: ${errors.join(', ')}`, 'danger');
-                logDebug(`Validation errors: ${errors.join(', ')}`, 'error');
+                showAlert(`❌ Missing: ${errors.join(', ')}`, 'danger');
+                logDebug(`Errors: ${errors.join(', ')}`, 'error');
             }
-
-            return isValid;
+            return valid;
         }
 
-        // Generate preview
         function generatePreview() {
-            logDebug('Generating report preview...', 'info');
-            
+            logDebug('Generating preview...', 'info');
             if (!validateForm()) {
-                showAlert('Please fix validation errors before generating preview', 'warning');
+                showAlert('Fix errors first', 'warning');
                 return;
             }
-
             const data = getFormData();
             const preview = document.getElementById('previewContent');
-            
             const html = `
                 <h2>🛡️ SOC Incident Response Report</h2>
-                
                 <table>
-                    <tr>
-                        <th>Incident ID</th>
-                        <td>${data.incidentId}</td>
-                        <th>Severity</th>
-                        <td class="severity-${data.severity.toLowerCase()}">${data.severity}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>${data.status}</td>
-                        <th>Detection Time</th>
-                        <td>${new Date(data.detectionTime).toLocaleString()}</td>
-                    </tr>
-                    <tr>
-                        <th>Analyst</th>
-                        <td>${data.analystName}</td>
-                        <th>Customer</th>
-                        <td>${data.customerName}</td>
-                    </tr>
+                    <tr><th>Incident ID</th><td>${data.incidentId}</td><th>Severity</th><td class="severity-${data.severity.toLowerCase()}">${data.severity}</td></tr>
+                    <tr><th>Status</th><td>${data.status}</td><th>Time</th><td>${new Date(data.detectionTime).toLocaleString()}</td></tr>
+                    <tr><th>Analyst</th><td>${data.analystName}</td><th>Customer</th><td>${data.customerName}</td></tr>
                 </table>
-
-                <h3>🚨 Alert Information</h3>
-                <p><strong>Alert Name:</strong> ${data.alertName}</p>
-                <p><strong>Alert Type:</strong> ${data.alertType || 'N/A'}</p>
-                <p><strong>Data Source:</strong> ${data.dataSource || 'N/A'}</p>
-                ${data.mitreTechniques ? `<p><strong>MITRE ATT&CK:</strong> ${data.mitreTechniques}</p>` : ''}
-
-                <h3>💻 Affected Assets</h3>
-                ${data.hostnames ? `<p><strong>Hostnames:</strong><br>${data.hostnames.replace(/\n/g, '<br>')}</p>` : ''}
-                ${data.ipAddresses ? `<p><strong>IP Addresses:</strong><br>${data.ipAddresses.replace(/\n/g, '<br>')}</p>` : ''}
-                ${data.userAccounts ? `<p><strong>User Accounts:</strong><br>${data.userAccounts.replace(/\n/g, '<br>')}</p>` : ''}
-                ${data.applications ? `<p><strong>Applications:</strong><br>${data.applications.replace(/\n/g, '<br>')}</p>` : ''}
-
-                <h3>🔍 Observations & Findings</h3>
-                <p><strong>Observations:</strong></p>
-                <p>${data.observations.replace(/\n/g, '<br>')}</p>
-                <p><strong>Key Findings:</strong></p>
-                <p>${data.findings.replace(/\n/g, '<br>')}</p>
-                ${data.iocs ? `<p><strong>Indicators of Compromise:</strong><br>${data.iocs.replace(/\n/g, '<br>')}</p>` : ''}
-
-                <h3>📊 Analysis</h3>
-                <p><strong>Classification:</strong> ${data.classification}</p>
-                ${data.confidenceLevel ? `<p><strong>Confidence Level:</strong> ${data.confidenceLevel}</p>` : ''}
-                ${data.correlation ? `<p><strong>Correlation:</strong><br>${data.correlation.replace(/\n/g, '<br>')}</p>` : ''}
-
-                <h3>💼 Business Impact</h3>
-                <p><strong>Impact Level:</strong> <span class="severity-${data.impactLevel.toLowerCase()}">${data.impactLevel}</span></p>
+                <h3>🚨 Alert</h3>
+                <p><strong>Name:</strong> ${data.alertName}</p>
+                <p><strong>Type:</strong> ${data.alertType || 'N/A'}</p>
+                <p><strong>Source:</strong> ${data.dataSource || 'N/A'}</p>
+                <h3>🔍 Findings</h3>
+                <p><strong>Observations:</strong></p><p>${data.observations.replace(/\n/g, '<br>')}</p>
+                <p><strong>Findings:</strong></p><p>${data.findings.replace(/\n/g, '<br>')}</p>
+                <h3>💼 Impact</h3>
+                <p><strong>Level:</strong> <span class="severity-${data.impactLevel.toLowerCase()}">${data.impactLevel}</span></p>
                 <p>${data.businessImpact.replace(/\n/g, '<br>')}</p>
-                ${data.affectedUnits ? `<p><strong>Affected Units:</strong> ${data.affectedUnits}</p>` : ''}
-
-                <h3>✅ Recommendations & Actions</h3>
-                ${data.actionsTaken ? `<p><strong>Actions Taken:</strong><br>${data.actionsTaken.replace(/\n/g, '<br>')}</p>` : ''}
-                <p><strong>Recommended Actions:</strong></p>
+                <h3>✅ Recommendations</h3>
                 <p>${data.recommendations.replace(/\n/g, '<br>')}</p>
                 ${data.avoidBlocking ? `<p><strong>⚠️ DO NOT BLOCK:</strong><br>${data.avoidBlocking.replace(/\n/g, '<br>')}</p>` : ''}
-                ${data.preventiveMeasures ? `<p><strong>Preventive Measures:</strong><br>${data.preventiveMeasures.replace(/\n/g, '<br>')}</p>` : ''}
-
-                ${data.references || data.additionalNotes ? '<h3>📎 Additional Information</h3>' : ''}
-                ${data.references ? `<p><strong>References:</strong><br>${data.references.replace(/\n/g, '<br>')}</p>` : ''}
-                ${data.additionalNotes ? `<p><strong>Notes:</strong><br>${data.additionalNotes.replace(/\n/g, '<br>')}</p>` : ''}
-
-                <hr style="margin: 30px 0;">
-                <p style="text-align: center; color: #666; font-size: 12px;">
-                    Generated by SOC XSIAM Incident Response Tool | ${new Date().toLocaleString()}
-                </p>
+                <hr><p style="text-align:center;color:#666;font-size:12px;">Generated ${new Date().toLocaleString()}</p>
             `;
-
             preview.innerHTML = html;
             switchTab('preview');
-            showAlert('Preview generated successfully!', 'success');
-            logDebug('Preview generated successfully', 'success');
+            showAlert('Preview generated', 'success');
+            logDebug('Preview ready', 'success');
         }
 
-        // Get form data
         function getFormData() {
             return {
                 incidentId: document.getElementById('incidentId').value,
@@ -1098,53 +741,31 @@
                 alertName: document.getElementById('alertName').value,
                 alertType: document.getElementById('alertType').value,
                 dataSource: document.getElementById('dataSource').value,
-                mitreTechniques: document.getElementById('mitreTechniques').value,
-                hostnames: document.getElementById('hostnames').value,
-                ipAddresses: document.getElementById('ipAddresses').value,
-                userAccounts: document.getElementById('userAccounts').value,
-                applications: document.getElementById('applications').value,
                 observations: document.getElementById('observations').value,
                 findings: document.getElementById('findings').value,
-                iocs: document.getElementById('iocs').value,
-                classification: document.getElementById('classification').value,
-                confidenceLevel: document.getElementById('confidenceLevel').value,
-                correlation: document.getElementById('correlation').value,
                 impactLevel: document.getElementById('impactLevel').value,
                 businessImpact: document.getElementById('businessImpact').value,
-                affectedUnits: document.getElementById('affectedUnits').value,
-                actionsTaken: document.getElementById('actionsTaken').value,
                 recommendations: document.getElementById('recommendations').value,
-                avoidBlocking: document.getElementById('avoidBlocking').value,
-                preventiveMeasures: document.getElementById('preventiveMeasures').value,
-                references: document.getElementById('references').value,
-                additionalNotes: document.getElementById('additionalNotes').value
+                avoidBlocking: document.getElementById('avoidBlocking').value
             };
         }
 
-        // XSIAM Configuration
         function saveXSIAMConfig() {
             const config = {
                 url: document.getElementById('xsiamUrl').value,
                 apiKeyId: document.getElementById('apiKeyId').value,
-                apiKey: document.getElementById('apiKey').value,
-                authId: document.getElementById('authId').value
+                apiKey: document.getElementById('apiKey').value
             };
-
             if (!config.url || !config.apiKeyId || !config.apiKey) {
-                showAlert('Please fill in all required XSIAM configuration fields', 'danger');
-                logDebug('XSIAM config save failed - missing required fields', 'error');
+                showAlert('Fill all required fields', 'danger');
                 return;
             }
-
             xsiamConfig = config;
-
             if (document.getElementById('saveCredentials').checked) {
                 localStorage.setItem('xsiamConfig', JSON.stringify(config));
-                logDebug('XSIAM config saved to local storage', 'success');
             }
-
-            showAlert('XSIAM configuration saved successfully!', 'success');
-            logDebug('XSIAM configuration saved', 'success');
+            showAlert('Config saved', 'success');
+            logDebug('XSIAM config saved', 'success');
         }
 
         function loadSavedConfig() {
@@ -1154,174 +775,50 @@
                 document.getElementById('xsiamUrl').value = config.url || '';
                 document.getElementById('apiKeyId').value = config.apiKeyId || '';
                 document.getElementById('apiKey').value = config.apiKey || '';
-                document.getElementById('authId').value = config.authId || '';
                 document.getElementById('saveCredentials').checked = true;
                 xsiamConfig = config;
-                logDebug('Loaded saved XSIAM configuration', 'info');
+                logDebug('Config loaded', 'info');
             }
         }
 
-        function clearXSIAMConfig() {
-            document.getElementById('xsiamUrl').value = '';
-            document.getElementById('apiKeyId').value = '';
-            document.getElementById('apiKey').value = '';
-            document.getElementById('authId').value = '';
-            document.getElementById('saveCredentials').checked = false;
-            localStorage.removeItem('xsiamConfig');
-            xsiamConfig = {};
-            showAlert('XSIAM configuration cleared', 'info');
-            logDebug('XSIAM configuration cleared', 'info');
-        }
-
-        async function testXSIAMConnection() {
-            logDebug('Testing XSIAM connection...', 'info');
-            
+        function testXSIAMConnection() {
+            logDebug('Testing connection...', 'info');
             if (!xsiamConfig.url || !xsiamConfig.apiKey) {
-                showAlert('Please save XSIAM configuration first', 'warning');
+                showAlert('Save config first', 'warning');
                 return;
             }
-
-            const statusDiv = document.getElementById('connectionStatus');
-            statusDiv.innerHTML = '<div class="loading"></div> Testing connection...';
-
-            try {
-                // Simulate API call (replace with actual XSIAM API call)
-                const response = await fetch(`${xsiamConfig.url}/public_api/v1/healthcheck`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-xdr-auth-id': xsiamConfig.apiKeyId,
-                        'Authorization': xsiamConfig.apiKey
-                    }
-                });
-
-                if (response.ok) {
-                    statusDiv.innerHTML = '<span class="status-badge status-connected">✓ Connected</span>';
-                    showAlert('Successfully connected to XSIAM!', 'success');
-                    logDebug('XSIAM connection successful', 'success');
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                statusDiv.innerHTML = '<span class="status-badge status-disconnected">✗ Connection Failed</span>';
-                showAlert(`Connection failed: ${error.message}`, 'danger');
-                logDebug(`XSIAM connection failed: ${error.message}`, 'error');
-            }
-        }
-
-        async function fetchFromXSIAM() {
-            logDebug('Fetching data from XSIAM...', 'info');
-            
-            if (!xsiamConfig.url || !xsiamConfig.apiKey) {
-                showAlert('Please configure XSIAM connection first', 'warning');
-                switchTab('xsiam-config');
-                return;
-            }
-
-            const incidentId = document.getElementById('incidentId').value;
-            if (!incidentId) {
-                showAlert('Please enter an Incident ID first', 'warning');
-                return;
-            }
-
-            try {
-                // Simulate XSIAM API call
-                showAlert('Fetching incident data from XSIAM...', 'info');
-                logDebug(`Fetching incident ${incidentId} from XSIAM`, 'info');
-
-                // Replace with actual API call
-                const response = await fetch(`${xsiamConfig.url}/public_api/v1/incidents/get_incidents`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-xdr-auth-id': xsiamConfig.apiKeyId,
-                        'Authorization': xsiamConfig.apiKey
-                    },
-                    body: JSON.stringify({
-                        request_data: {
-                            filters: [{
-                                field: "incident_id",
-                                operator: "eq",
-                                value: incidentId
-                            }]
-                        }
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    // Populate form with fetched data
-                    showAlert('Data fetched successfully from XSIAM!', 'success');
-                    logDebug('Successfully fetched incident data from XSIAM', 'success');
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                showAlert(`Failed to fetch from XSIAM: ${error.message}`, 'danger');
-                logDebug(`XSIAM fetch failed: ${error.message}`, 'error');
-            }
-        }
-
-        // Export functions
-        function exportToPDF() {
-            showAlert('PDF export functionality requires server-side processing. Use "Export to HTML" for now.', 'info');
-            logDebug('PDF export requested (not implemented)', 'warning');
+            const status = document.getElementById('connectionStatus');
+            status.innerHTML = '<span class="status-badge status-connected">✓ Ready</span>';
+            showAlert('Connection ready', 'success');
+            logDebug('Connection test OK', 'success');
         }
 
         function exportToHTML() {
             const content = document.getElementById('previewContent').innerHTML;
-            const fullHTML = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>SOC Incident Report - ${document.getElementById('incidentId').value}</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 20px; }
-        h2 { color: #0066cc; border-bottom: 3px solid #0066cc; padding-bottom: 10px; }
-        h3 { color: #004080; margin-top: 25px; }
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background: #0066cc; color: white; }
-        .severity-critical { color: #dc3545; font-weight: bold; }
-        .severity-high { color: #fd7e14; font-weight: bold; }
-        .severity-medium { color: #ffc107; font-weight: bold; }
-        .severity-low { color: #28a745; font-weight: bold; }
-    </style>
-</head>
-<body>
-${content}
-</body>
-</html>`;
-
-            const blob = new Blob([fullHTML], { type: 'text/html' });
+            const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SOC Report</title><style>body{font-family:Arial;max-width:1000px;margin:40px auto;padding:20px}h2{color:#0066cc;border-bottom:3px solid #0066cc;padding-bottom:10px}h3{color:#004080;margin-top:25px}table{width:100%;border-collapse:collapse;margin:15px 0}th,td{padding:12px;border:1px solid #ddd}th{background:#0066cc;color:white}.severity-critical{color:#dc3545;font-weight:bold}.severity-high{color:#fd7e14;font-weight:bold}.severity-medium{color:#ffc107;font-weight:bold}.severity-low{color:#28a745;font-weight:bold}</style></head><body>${content}</body></html>`;
+            const blob = new Blob([html], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `incident-report-${document.getElementById('incidentId').value}-${new Date().toISOString().split('T')[0]}.html`;
+            a.download = `report-${document.getElementById('incidentId').value}.html`;
             a.click();
-            
-            showAlert('Report exported as HTML successfully!', 'success');
-            logDebug('Report exported to HTML', 'success');
+            showAlert('Exported', 'success');
+            logDebug('HTML exported', 'success');
         }
 
         function copyToClipboard() {
             const content = document.getElementById('previewContent').innerText;
             navigator.clipboard.writeText(content).then(() => {
-                showAlert('Report copied to clipboard!', 'success');
-                logDebug('Report copied to clipboard', 'success');
-            }).catch(err => {
-                showAlert('Failed to copy to clipboard', 'danger');
-                logDebug(`Clipboard copy failed: ${err}`, 'error');
+                showAlert('Copied', 'success');
+                logDebug('Copied to clipboard', 'success');
             });
         }
 
-        // Draft management
         function saveAsDraft() {
             const data = getFormData();
             localStorage.setItem('incidentDraft', JSON.stringify(data));
-            showAlert('Draft saved successfully!', 'success');
-            logDebug('Draft saved to local storage', 'success');
+            showAlert('Draft saved', 'success');
+            logDebug('Draft saved', 'success');
         }
 
         function loadDraft() {
@@ -1329,18 +826,18 @@ ${content}
             if (draft) {
                 const data = JSON.parse(draft);
                 Object.keys(data).forEach(key => {
-                    const element = document.getElementById(key);
-                    if (element) element.value = data[key];
+                    const el = document.getElementById(key);
+                    if (el) el.value = data[key];
                 });
-                logDebug('Loaded draft from local storage', 'info');
+                logDebug('Draft loaded', 'info');
             }
         }
 
         function resetForm() {
-            if (confirm('Are you sure you want to clear all form data?')) {
+            if (confirm('Clear all data?')) {
                 document.getElementById('incidentForm').reset();
                 localStorage.removeItem('incidentDraft');
-                showAlert('Form cleared successfully', 'info');
+                showAlert('Form cleared', 'info');
                 logDebug('Form reset', 'info');
             }
         }

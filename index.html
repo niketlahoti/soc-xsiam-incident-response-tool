@@ -224,6 +224,7 @@
         .alert-success { background: rgba(40,167,69,0.2); border-left: 4px solid var(--success); }
         .alert-danger { background: rgba(220,53,69,0.2); border-left: 4px solid var(--danger); }
         .alert-info { background: rgba(23,162,184,0.2); border-left: 4px solid var(--info); }
+        .alert-warning { background: rgba(255,193,7,0.2); border-left: 4px solid var(--warning); }
         
         .two-column {
             display: grid; grid-template-columns: 1fr 2fr; gap: 15px;
@@ -261,6 +262,11 @@
         .status-dot.online { background: var(--success); }
         .status-dot.offline { background: var(--danger); }
         
+        .cors-notice {
+            background: rgba(255,193,7,0.2); padding: 15px; border-radius: 8px;
+            border-left: 4px solid var(--warning); margin-bottom: 15px;
+        }
+        
         @media (max-width: 1200px) {
             .two-column { grid-template-columns: 1fr; }
         }
@@ -284,16 +290,37 @@
 
         <div id="alert-container"></div>
 
+        <!-- CORS Notice -->
+        <div class="cors-notice">
+            <strong>⚠️ CORS Configuration Required:</strong>
+            <p style="margin-top: 8px; font-size: 12px;">
+                Due to browser CORS restrictions, direct API calls from GitHub Pages to XSIAM are blocked. 
+                <strong>Solutions:</strong>
+            </p>
+            <ul style="margin-top: 8px; font-size: 11px; margin-left: 20px;">
+                <li><strong>Option 1:</strong> Use CORS proxy: <code>https://corsproxy.io/?</code> (prepend to API URL)</li>
+                <li><strong>Option 2:</strong> Deploy backend proxy server (recommended for production)</li>
+                <li><strong>Option 3:</strong> Use browser extension like "CORS Unblock" for testing</li>
+                <li><strong>Option 4:</strong> Configure XSIAM CORS settings (if available)</li>
+            </ul>
+            <div style="margin-top: 10px;">
+                <label style="font-size: 12px; font-weight: 600;">
+                    <input type="checkbox" id="useCorsProxy" onchange="toggleCorsProxy()" checked>
+                    Use CORS Proxy (corsproxy.io)
+                </label>
+            </div>
+        </div>
+
         <!-- Auto-Sync Controls -->
         <div class="sync-controls">
             <div class="sync-status">
                 <div class="sync-indicator" id="syncIndicator"></div>
                 <span style="font-weight: 600; font-size: 13px;">Auto-Sync:</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="autoSyncToggle" checked onchange="toggleAutoSync()">
+                    <input type="checkbox" id="autoSyncToggle" onchange="toggleAutoSync()">
                     <span class="slider"></span>
                 </label>
-                <span id="syncStatusText" style="font-size: 12px; color: var(--success);">Active</span>
+                <span id="syncStatusText" style="font-size: 12px; color: var(--danger);">Inactive</span>
             </div>
             
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -325,25 +352,25 @@
             
             <div class="dashboard-grid">
                 <div class="widget">
-                    <div class="last-updated" id="incidentsLastUpdate">Loading...</div>
+                    <div class="last-updated" id="incidentsLastUpdate">Not synced</div>
                     <h3>Total Incidents</h3>
                     <div class="widget-value" id="totalIncidents">-</div>
                     <div class="widget-label">From XSIAM</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="criticalLastUpdate">Loading...</div>
+                    <div class="last-updated" id="criticalLastUpdate">Not synced</div>
                     <h3>Critical Alerts</h3>
                     <div class="widget-value critical" id="criticalAlerts">-</div>
                     <div class="widget-label">High Priority</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="highLastUpdate">Loading...</div>
+                    <div class="last-updated" id="highLastUpdate">Not synced</div>
                     <h3>High Severity</h3>
                     <div class="widget-value high" id="highAlerts">-</div>
                     <div class="widget-label">Requires Attention</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="mediumLastUpdate">Loading...</div>
+                    <div class="last-updated" id="mediumLastUpdate">Not synced</div>
                     <h3>Medium Severity</h3>
                     <div class="widget-value medium" id="mediumAlerts">-</div>
                     <div class="widget-label">Monitor</div>
@@ -363,7 +390,11 @@
             <div class="two-column">
                 <div class="form-section">
                     <h3>📋 Open Incidents (<span id="incidentCount">0</span>)</h3>
-                    <div id="incidentsList" style="max-height: 600px; overflow-y: auto;"></div>
+                    <div id="incidentsList" style="max-height: 600px; overflow-y: auto;">
+                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            Click "Fetch Live Cases" to load incidents
+                        </p>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -392,8 +423,8 @@
                 <div class="data-source-item">
                     <span style="font-weight: 600;">Connection Status</span>
                     <div style="display: flex; align-items: center; gap: 6px;">
-                        <div class="status-dot" id="connectionStatus"></div>
-                        <span id="connectionStatusText">Checking...</span>
+                        <div class="status-dot offline" id="connectionStatus"></div>
+                        <span id="connectionStatusText">Not connected</span>
                     </div>
                 </div>
                 <div class="data-source-item">
@@ -403,6 +434,22 @@
                 <div class="data-source-item">
                     <span style="font-weight: 600;">Total Incidents Retrieved</span>
                     <span id="totalRetrieved">0</span>
+                </div>
+                <div class="data-source-item">
+                    <span style="font-weight: 600;">CORS Proxy</span>
+                    <span id="corsProxyStatus">Enabled</span>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📝 API Request Details</h3>
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 6px; font-family: monospace; font-size: 11px; overflow-x: auto;">
+                    <div><strong>Endpoint:</strong> <span id="apiEndpointDisplay">-</span></div>
+                    <div style="margin-top: 8px;"><strong>Method:</strong> POST</div>
+                    <div style="margin-top: 8px;"><strong>Headers:</strong></div>
+                    <div style="margin-left: 15px;">x-xdr-auth-id: 10</div>
+                    <div style="margin-left: 15px;">Authorization: gyljBCKp2Nv...</div>
+                    <div style="margin-top: 8px;"><strong>Last Error:</strong> <span id="lastError" style="color: var(--danger);">None</span></div>
                 </div>
             </div>
         </div>
@@ -447,10 +494,11 @@
         // Global state
         let customers = {};
         let currentTenant = 'atpl-nfr';
-        let autoSyncEnabled = true;
+        let autoSyncEnabled = false;
         let syncInterval = 30;
         let syncTimer = null;
         let incidents = [];
+        let useCorsProxy = true;
 
         // Default ATPL NFR customer
         const defaultCustomer = {
@@ -469,7 +517,6 @@
         });
 
         function initializeApp() {
-            // Load customers from storage
             const stored = localStorage.getItem('mssp_customers');
             if (stored) {
                 try {
@@ -479,7 +526,6 @@
                 }
             }
 
-            // Add default customer if not exists
             if (!customers['atpl-nfr']) {
                 customers['atpl-nfr'] = defaultCustomer;
                 localStorage.setItem('mssp_customers', JSON.stringify(customers));
@@ -487,8 +533,24 @@
 
             loadCustomers();
             displayCustomersList();
-            startAutoSync();
-            fetchLiveCases(); // Initial fetch
+            updateApiEndpointDisplay();
+        }
+
+        function toggleCorsProxy() {
+            useCorsProxy = document.getElementById('useCorsProxy').checked;
+            document.getElementById('corsProxyStatus').textContent = useCorsProxy ? 'Enabled' : 'Disabled';
+            updateApiEndpointDisplay();
+            showAlert(useCorsProxy ? 'CORS proxy enabled' : 'CORS proxy disabled', 'info');
+        }
+
+        function updateApiEndpointDisplay() {
+            const customer = customers[currentTenant];
+            if (customer) {
+                const endpoint = useCorsProxy 
+                    ? `https://corsproxy.io/?${encodeURIComponent(customer.apiUrl + '/public_api/v1/incidents/get_incidents/')}`
+                    : customer.apiUrl + '/public_api/v1/incidents/get_incidents/';
+                document.getElementById('apiEndpointDisplay').textContent = endpoint;
+            }
         }
 
         function toggleAutoSync() {
@@ -547,8 +609,12 @@
             try {
                 showAlert('Fetching live cases from XSIAM...', 'info');
                 
-                // XSIAM API endpoint for incidents
-                const apiUrl = `${customer.apiUrl}/public_api/v1/incidents/get_incidents/`;
+                let apiUrl = customer.apiUrl + '/public_api/v1/incidents/get_incidents/';
+                
+                // Use CORS proxy if enabled
+                if (useCorsProxy) {
+                    apiUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+                }
                 
                 const requestBody = {
                     request_data: {
@@ -562,6 +628,9 @@
                     }
                 };
 
+                console.log('Fetching from:', apiUrl);
+                console.log('Request body:', requestBody);
+
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
@@ -572,29 +641,41 @@
                     body: JSON.stringify(requestBody)
                 });
 
+                console.log('Response status:', response.status);
+
                 if (!response.ok) {
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    const errorText = await response.text();
+                    throw new Error(`API Error: ${response.status} - ${errorText}`);
                 }
 
                 const data = await response.json();
+                console.log('Response data:', data);
                 
                 if (data.reply && data.reply.incidents) {
                     incidents = data.reply.incidents;
                     updateDashboard();
                     displayIncidents();
                     updateConnectionStatus(true);
-                    showAlert(`Successfully fetched ${incidents.length} incidents`, 'success');
+                    showAlert(`✅ Successfully fetched ${incidents.length} incidents`, 'success');
                     
                     document.getElementById('lastFetchTime').textContent = now.toLocaleString();
                     document.getElementById('totalRetrieved').textContent = incidents.length;
+                    document.getElementById('lastError').textContent = 'None';
                 } else {
-                    throw new Error('Invalid response format');
+                    throw new Error('Invalid response format from XSIAM API');
                 }
 
             } catch (error) {
                 console.error('Error fetching incidents:', error);
                 updateConnectionStatus(false);
-                showAlert(`Error: ${error.message}`, 'danger');
+                document.getElementById('lastError').textContent = error.message;
+                
+                let errorMsg = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMsg = 'CORS Error: Unable to connect. Try enabling CORS proxy or use browser extension.';
+                }
+                
+                showAlert(`❌ ${errorMsg}`, 'danger');
             }
 
             updateLastUpdatedTimes();
@@ -633,17 +714,15 @@
             document.getElementById('incidentCount').textContent = incidents.length;
             
             if (incidents.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No incidents found</p>';
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No incidents found in XSIAM</p>';
                 return;
             }
             
             container.innerHTML = incidents.map(inc => {
-                const severityClass = inc.severity === 'high' || inc.severity === 'critical' ? 'critical' : 
-                                     inc.severity === 'medium' ? 'medium' : 'low';
                 const creationTime = new Date(inc.creation_time).toLocaleString();
                 
                 return `
-                    <div class="incident-card" onclick='showIncidentDetails(${JSON.stringify(inc).replace(/'/g, "&apos;")})'>
+                    <div class="incident-card" onclick='showIncidentDetails(${JSON.stringify(inc).replace(/'/g, "&#39;")})'>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                             <strong>${inc.incident_id || 'N/A'}</strong>
                             <span class="status-badge" style="background: rgba(220,53,69,0.2); color: var(--danger);">${inc.severity || 'Unknown'}</span>
@@ -709,7 +788,7 @@
                     ` : ''}
                     
                     <div style="margin-bottom: 15px;">
-                        <strong>📊 Additional Info:</strong>
+                        <strong>📊 Raw Data:</strong>
                         <p style="margin-top: 8px; font-size: 11px; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; max-height: 200px; overflow-y: auto;">
                             ${JSON.stringify(incident, null, 2)}
                         </p>
@@ -763,8 +842,9 @@
                     </div>
                     <div style="margin-top: 12px; font-size: 11px; color: var(--text-secondary);">
                         <strong>API Endpoint:</strong> ${customer.apiUrl}<br>
+                        <strong>API Key ID:</strong> ${customer.apiKeyId}<br>
                         <strong>Onboarded:</strong> ${new Date(customer.onboardedDate).toLocaleDateString()}<br>
-                        <strong>Status:</strong> Connected to XSIAM
+                        <strong>Status:</strong> Ready to connect
                     </div>
                 </div>
             `;
@@ -780,7 +860,7 @@
         function switchTenant() {
             currentTenant = document.getElementById('tenantSelector').value;
             displayCustomersList();
-            fetchLiveCases();
+            updateApiEndpointDisplay();
         }
 
         function showOnboardModal() {
@@ -821,7 +901,6 @@
             closeOnboardModal();
             showAlert(`Customer "${name}" onboarded successfully!`, 'success');
             
-            // Clear form
             document.getElementById('onboardName').value = '';
             document.getElementById('onboardXsiamUrl').value = '';
             document.getElementById('onboardApiKeyId').value = '';
@@ -837,7 +916,7 @@
             setTimeout(() => {
                 alert.classList.remove('show');
                 setTimeout(() => alert.remove(), 300);
-            }, 4000);
+            }, 5000);
         }
     </script>
 </body>

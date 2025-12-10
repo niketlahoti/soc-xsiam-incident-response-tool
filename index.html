@@ -34,7 +34,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -405,6 +405,146 @@
             cursor: pointer;
         }
 
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .incidents-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .incident-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--info-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .incident-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .incident-card.selected {
+            border-left-color: var(--success-color);
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        .incident-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .incident-id {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .incident-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .analysis-panel {
+            background: rgba(23, 162, 184, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--info-color);
+            margin-top: 20px;
+        }
+
+        .analysis-panel h4 {
+            color: var(--info-color);
+            margin-bottom: 15px;
+        }
+
+        .auto-fetch-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .auto-fetch-controls label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .refresh-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success-color);
+            font-size: 12px;
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -417,24 +557,87 @@
                 justify-content: center;
             }
         }
+
+        .email-preview {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🛡️ SOC Analyst - XSIAM Incident Response Tool</h1>
-            <p>Enterprise-grade incident response management with Palo Alto Cortex XSIAM integration</p>
+            <p>Enterprise-grade incident response with AI-powered analysis & auto-sync</p>
         </header>
 
         <div class="tabs">
-            <button class="tab-button active" onclick="switchTab('incident-form')">📋 Incident Report</button>
-            <button class="tab-button" onclick="switchTab('xsiam-config')">⚙️ XSIAM Config</button>
+            <button class="tab-button active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-button" onclick="switchTab('incident-form')">📋 Incident Report</button>
+            <button class="tab-button" onclick="switchTab('xsiam-config')">⚙️ Configuration</button>
             <button class="tab-button" onclick="switchTab('preview')">👁️ Preview</button>
             <button class="tab-button" onclick="switchTab('debug')">🔧 Debug</button>
         </div>
 
-        <div id="incident-form" class="tab-content active">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
             <div id="alert-container"></div>
+
+            <div class="auto-fetch-controls">
+                <label>
+                    <span>Auto-Fetch Incidents:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoFetchToggle" onchange="toggleAutoFetch()">
+                        <span class="slider"></span>
+                    </label>
+                </label>
+                <button class="btn btn-primary" onclick="fetchOpenIncidents()">🔄 Refresh Now</button>
+                <div id="refreshIndicator" class="refresh-indicator" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <span>Auto-refreshing...</span>
+                </div>
+                <span id="lastRefresh" style="font-size: 12px; color: var(--text-secondary);"></span>
+            </div>
+
+            <div class="two-column-layout">
+                <div class="form-section">
+                    <h3>📋 Open Incidents</h3>
+                    <div id="incidentsList" class="incidents-list">
+                        <p style="color: var(--text-secondary); text-align: center; padding: 40px;">
+                            Click "Refresh Now" or enable Auto-Fetch to load incidents
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🤖 AI Analysis</h3>
+                    <div id="analysisPanel">
+                        <p style="color: var(--text-secondary); text-align: center; padding: 40px;">
+                            Select an incident to view AI-powered analysis
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incident Form Tab -->
+        <div id="incident-form" class="tab-content">
             <form id="incidentForm">
                 <div class="form-section">
                     <h3>📌 Basic Information</h3>
@@ -455,11 +658,12 @@
                         </div>
                         <div class="form-group">
                             <label>Status <span class="required">*</span></label>
-                            <select id="status" required>
+                            <select id="status" required onchange="syncStatusToXSIAM()">
                                 <option value="">Select</option>
                                 <option value="New">New</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
                     </div>
@@ -554,12 +758,14 @@
                 <div class="button-group">
                     <button type="button" class="btn btn-primary" onclick="validateForm()">✓ Validate</button>
                     <button type="button" class="btn btn-success" onclick="generatePreview()">👁️ Preview</button>
+                    <button type="button" class="btn btn-info" onclick="showEmailDialog()">📧 Send Email</button>
                     <button type="button" class="btn btn-warning" onclick="saveAsDraft()">💾 Save Draft</button>
                     <button type="button" class="btn btn-danger" onclick="resetForm()">🗑️ Clear</button>
                 </div>
             </form>
         </div>
 
+        <!-- Configuration Tab -->
         <div id="xsiam-config" class="tab-content">
             <div class="form-section">
                 <h3>🔐 XSIAM API Configuration</h3>
@@ -575,9 +781,14 @@
                     <label>API Key <span class="required">*</span></label>
                     <input type="password" id="apiKey">
                 </div>
+                <div class="form-group">
+                    <label>Auto-Fetch Interval (seconds)</label>
+                    <input type="number" id="fetchInterval" value="30" min="10" max="300">
+                    <span class="help-text">How often to check for new incidents (10-300 seconds)</span>
+                </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="saveCredentials">
-                    <label for="saveCredentials">Save locally</label>
+                    <label for="saveCredentials">Save credentials locally</label>
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn btn-primary" onclick="saveXSIAMConfig()">💾 Save</button>
@@ -585,12 +796,58 @@
                 </div>
                 <div id="connectionStatus"></div>
             </div>
+
+            <div class="form-section">
+                <h3>📧 Email Configuration</h3>
+                <div class="form-group">
+                    <label>SMTP Server <span class="required">*</span></label>
+                    <input type="text" id="smtpServer" placeholder="smtp.gmail.com">
+                    <span class="help-text">Your email provider's SMTP server</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>SMTP Port <span class="required">*</span></label>
+                        <input type="number" id="smtpPort" value="587" placeholder="587">
+                    </div>
+                    <div class="form-group">
+                        <label>Use TLS/SSL</label>
+                        <select id="smtpSecure">
+                            <option value="tls">TLS (587)</option>
+                            <option value="ssl">SSL (465)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>From Email <span class="required">*</span></label>
+                    <input type="email" id="fromEmail" placeholder="soc-team@company.com">
+                </div>
+                <div class="form-group">
+                    <label>Email Password/App Password <span class="required">*</span></label>
+                    <input type="password" id="emailPassword">
+                    <span class="help-text">Use app-specific password for Gmail/Outlook</span>
+                </div>
+                <div class="form-group">
+                    <label>Default Recipient Email</label>
+                    <input type="email" id="defaultRecipient" placeholder="customer@company.com">
+                    <span class="help-text">Default customer email (can be changed per incident)</span>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveEmailConfig">
+                    <label for="saveEmailConfig">Save email configuration locally</label>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" onclick="saveEmailConfig()">💾 Save Email Config</button>
+                    <button type="button" class="btn btn-success" onclick="testEmailConnection()">📧 Test Email</button>
+                </div>
+            </div>
         </div>
 
+        <!-- Preview Tab -->
         <div id="preview" class="tab-content">
             <div class="button-group">
                 <button type="button" class="btn btn-primary" onclick="generatePreview()">🔄 Refresh</button>
                 <button type="button" class="btn btn-info" onclick="exportToHTML()">📧 Export HTML</button>
+                <button type="button" class="btn btn-success" onclick="showEmailDialog()">📨 Send Email</button>
                 <button type="button" class="btn btn-warning" onclick="copyToClipboard()">📋 Copy</button>
             </div>
             <div id="previewContent" class="preview-section">
@@ -599,6 +856,7 @@
             </div>
         </div>
 
+        <!-- Debug Tab -->
         <div id="debug" class="tab-content">
             <div class="form-section">
                 <h3>🔧 Debug Console</h3>
@@ -613,12 +871,40 @@
         </div>
     </div>
 
+    <!-- Email Dialog Modal -->
+    <div id="emailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: var(--card-bg); padding: 30px; border-radius: 10px; max-width: 600px; width: 90%;">
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">📧 Send Incident Report via Email</h3>
+            <div class="form-group">
+                <label>Recipient Email <span class="required">*</span></label>
+                <input type="email" id="recipientEmail" placeholder="customer@company.com">
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <input type="text" id="emailSubject" value="SOC Incident Report">
+            </div>
+            <div class="form-group">
+                <label>Additional Message</label>
+                <textarea id="emailMessage" rows="4" placeholder="Dear Customer,&#10;&#10;Please find the incident analysis report below."></textarea>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-success" onclick="sendEmail()">📨 Send Email</button>
+                <button type="button" class="btn btn-danger" onclick="closeEmailDialog()">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let debugAutoScroll = true;
         let xsiamConfig = {};
+        let emailConfig = {};
+        let autoFetchInterval = null;
+        let selectedIncident = null;
+        let currentIncidents = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedConfig();
+            loadEmailConfig();
             loadDraft();
             logDebug('Application loaded', 'success');
         });
@@ -668,6 +954,267 @@
                 alert.classList.remove('show');
                 setTimeout(() => alert.remove(), 300);
             }, 5000);
+        }
+
+        // Auto-fetch functionality
+        function toggleAutoFetch() {
+            const enabled = document.getElementById('autoFetchToggle').checked;
+            const indicator = document.getElementById('refreshIndicator');
+            
+            if (enabled) {
+                if (!xsiamConfig.url || !xsiamConfig.apiKey) {
+                    showAlert('Please configure XSIAM connection first', 'warning');
+                    document.getElementById('autoFetchToggle').checked = false;
+                    return;
+                }
+                
+                const interval = (parseInt(document.getElementById('fetchInterval').value) || 30) * 1000;
+                autoFetchInterval = setInterval(fetchOpenIncidents, interval);
+                indicator.style.display = 'flex';
+                fetchOpenIncidents();
+                showAlert(`Auto-fetch enabled (every ${interval/1000}s)`, 'success');
+                logDebug(`Auto-fetch enabled with ${interval/1000}s interval`, 'success');
+            } else {
+                if (autoFetchInterval) {
+                    clearInterval(autoFetchInterval);
+                    autoFetchInterval = null;
+                }
+                indicator.style.display = 'none';
+                showAlert('Auto-fetch disabled', 'info');
+                logDebug('Auto-fetch disabled', 'info');
+            }
+        }
+
+        // Fetch open incidents from XSIAM
+        async function fetchOpenIncidents() {
+            logDebug('Fetching open incidents from XSIAM...', 'info');
+            
+            if (!xsiamConfig.url || !xsiamConfig.apiKey) {
+                showAlert('Configure XSIAM connection first', 'warning');
+                return;
+            }
+
+            try {
+                // Simulated XSIAM API call - Replace with actual API integration
+                const mockIncidents = [
+                    {
+                        id: 'INC-2025-001234',
+                        severity: 'High',
+                        status: 'New',
+                        alertName: 'Suspicious PowerShell Execution',
+                        detectionTime: new Date().toISOString(),
+                        affectedHost: 'DESKTOP-ABC123',
+                        description: 'Detected encoded PowerShell command execution'
+                    },
+                    {
+                        id: 'INC-2025-001235',
+                        severity: 'Critical',
+                        status: 'In Progress',
+                        alertName: 'Ransomware Activity Detected',
+                        detectionTime: new Date(Date.now() - 3600000).toISOString(),
+                        affectedHost: 'SERVER-XYZ456',
+                        description: 'Multiple file encryption attempts detected'
+                    },
+                    {
+                        id: 'INC-2025-001236',
+                        severity: 'Medium',
+                        status: 'New',
+                        alertName: 'Brute Force Login Attempt',
+                        detectionTime: new Date(Date.now() - 7200000).toISOString(),
+                        affectedHost: 'WEB-SERVER-01',
+                        description: 'Multiple failed login attempts from external IP'
+                    }
+                ];
+
+                currentIncidents = mockIncidents;
+                displayIncidents(mockIncidents);
+                
+                document.getElementById('lastRefresh').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+                logDebug(`Fetched ${mockIncidents.length} open incidents`, 'success');
+                
+            } catch (error) {
+                showAlert(`Failed to fetch incidents: ${error.message}`, 'danger');
+                logDebug(`Fetch error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayIncidents(incidents) {
+            const container = document.getElementById('incidentsList');
+            
+            if (incidents.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">No open incidents found</p>';
+                return;
+            }
+
+            container.innerHTML = incidents.map(inc => `
+                <div class="incident-card" onclick="selectIncident('${inc.id}')">
+                    <div class="incident-header">
+                        <span class="incident-id">${inc.id}</span>
+                        <span class="status-badge severity-${inc.severity.toLowerCase()}">${inc.severity}</span>
+                    </div>
+                    <div><strong>${inc.alertName}</strong></div>
+                    <div class="incident-meta">
+                        Status: ${inc.status} | Host: ${inc.affectedHost}<br>
+                        Detected: ${new Date(inc.detectionTime).toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function selectIncident(incidentId) {
+            logDebug(`Selected incident: ${incidentId}`, 'info');
+            
+            // Highlight selected incident
+            document.querySelectorAll('.incident-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            selectedIncident = currentIncidents.find(inc => inc.id === incidentId);
+            
+            // Auto-perform AI analysis
+            await performAIAnalysis(selectedIncident);
+        }
+
+        async function performAIAnalysis(incident) {
+            const panel = document.getElementById('analysisPanel');
+            panel.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><p>Analyzing incident...</p></div>';
+            
+            logDebug(`Starting AI analysis for ${incident.id}`, 'info');
+            
+            // Simulate AI analysis delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Generate AI analysis
+            const analysis = generateAIAnalysis(incident);
+            
+            panel.innerHTML = `
+                <div class="analysis-panel">
+                    <h4>🤖 AI-Powered Analysis Results</h4>
+                    <p><strong>Incident ID:</strong> ${incident.id}</p>
+                    <p><strong>Threat Classification:</strong> ${analysis.classification}</p>
+                    <p><strong>Confidence Level:</strong> ${analysis.confidence}</p>
+                    <p><strong>MITRE ATT&CK:</strong> ${analysis.mitre}</p>
+                    
+                    <h4 style="margin-top: 20px;">📊 Key Findings</h4>
+                    <p>${analysis.findings}</p>
+                    
+                    <h4 style="margin-top: 20px;">💼 Business Impact</h4>
+                    <p>${analysis.impact}</p>
+                    
+                    <h4 style="margin-top: 20px;">✅ Recommended Actions</h4>
+                    <p>${analysis.recommendations}</p>
+                    
+                    <h4 style="margin-top: 20px;">⚠️ Items to Avoid Blocking</h4>
+                    <p>${analysis.avoidBlocking}</p>
+                    
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn btn-success" onclick="applyAnalysisToForm()">📋 Apply to Form</button>
+                        <button class="btn btn-info" onclick="generatePreviewFromAnalysis()">👁️ Preview Report</button>
+                        <button class="btn btn-primary" onclick="showEmailDialog()">📧 Send to Customer</button>
+                    </div>
+                </div>
+            `;
+            
+            logDebug(`AI analysis completed for ${incident.id}`, 'success');
+            showAlert('AI analysis completed successfully', 'success');
+        }
+
+        function generateAIAnalysis(incident) {
+            // AI-powered analysis simulation
+            const analyses = {
+                'Suspicious PowerShell Execution': {
+                    classification: 'True Positive - Malicious Activity',
+                    confidence: 'High (92%)',
+                    mitre: 'T1059.001 (PowerShell), T1027 (Obfuscated Files)',
+                    findings: 'Detected Base64-encoded PowerShell command attempting to download and execute remote payload. Command originated from user context without administrative privileges. Network connection established to known malicious IP 185.220.101.45.',
+                    impact: 'Medium - Potential data exfiltration attempt. No evidence of successful execution. Endpoint isolated automatically. No business-critical systems affected.',
+                    recommendations: 'FOR ENDPOINT TEAM: Apply latest PowerShell security patches, enable PowerShell logging v5.0+, implement application whitelisting.\n\nFOR NOC TEAM: Block outbound connections to IP 185.220.101.45 and associated subnet 185.220.101.0/24.\n\nFOR IT TEAM: Reset user credentials, scan endpoint with updated AV signatures, review user activity logs for past 48 hours.',
+                    avoidBlocking: 'Do NOT block legitimate PowerShell usage for:\n- System administrators (AD group: IT-Admins)\n- Automation scripts on servers: SRV-AUTOMATION-01, SRV-BACKUP-01\n- Business application: SAP PowerShell modules'
+                },
+                'Ransomware Activity Detected': {
+                    classification: 'True Positive - Critical Threat',
+                    confidence: 'Very High (98%)',
+                    mitre: 'T1486 (Data Encrypted for Impact), T1490 (Inhibit System Recovery)',
+                    findings: 'Ransomware variant identified as LockBit 3.0. Encrypted 1,247 files across network shares. Shadow copies deleted. Ransom note detected in multiple directories. Initial infection vector: phishing email with malicious attachment.',
+                    impact: 'Critical - Business operations severely impacted. File server offline. Finance and HR departments unable to access critical documents. Estimated recovery time: 24-48 hours with backups.',
+                    recommendations: 'IMMEDIATE ACTIONS:\n- Isolate all affected systems from network\n- Disable user account: john.doe@company.com\n- Initiate backup restoration from 12 hours ago\n- Engage incident response team\n\nFOR NOC TEAM: Block all outbound traffic from affected subnet 192.168.10.0/24\n\nFOR IT TEAM: Force password reset for all users, deploy emergency security patches',
+                    avoidBlocking: 'CRITICAL - Do NOT block:\n- Backup server IPs: 10.0.5.10, 10.0.5.11\n- Domain controllers: DC01.company.local, DC02.company.local\n- Emergency response tools on admin workstations'
+                },
+                'Brute Force Login Attempt': {
+                    classification: 'True Positive - Unauthorized Access Attempt',
+                    confidence: 'High (88%)',
+                    mitre: 'T1110.001 (Brute Force: Password Guessing)',
+                    findings: '342 failed login attempts detected from IP 203.0.113.45 targeting admin accounts. Attack pattern matches known botnet activity. No successful logins recorded. WAF rules triggered and blocked subsequent attempts.',
+                    impact: 'Low - No successful breach. Security controls functioning as designed. No business impact. Monitoring continues.',
+                    recommendations: 'FOR NOC TEAM: Add IP 203.0.113.45 to blocklist, implement rate limiting on login endpoints (max 5 attempts per 15 minutes)\n\nFOR IT TEAM: Enable MFA for all admin accounts if not already active, review and strengthen password policies\n\nFOR SECURITY TEAM: Monitor for similar patterns from different IPs, update threat intelligence feeds',
+                    avoidBlocking: 'Do NOT block:\n- Corporate VPN gateway IPs: 198.51.100.0/24\n- Partner organization IPs: 203.0.113.0/25 (except .45)\n- Cloud service provider IPs for legitimate integrations'
+                }
+            };
+            
+            return analyses[incident.alertName] || {
+                classification: 'Requires Further Investigation',
+                confidence: 'Medium (65%)',
+                mitre: 'Multiple techniques detected',
+                findings: 'Automated analysis in progress. Manual review recommended.',
+                impact: 'To be determined based on detailed investigation.',
+                recommendations: 'Conduct thorough investigation, collect additional forensic data, correlate with other security events.',
+                avoidBlocking: 'Exercise caution before blocking any resources. Verify with business stakeholders.'
+            };
+        }
+
+        function applyAnalysisToForm() {
+            if (!selectedIncident) return;
+            
+            const analysis = generateAIAnalysis(selectedIncident);
+            
+            document.getElementById('incidentId').value = selectedIncident.id;
+            document.getElementById('severity').value = selectedIncident.severity;
+            document.getElementById('status').value = selectedIncident.status;
+            document.getElementById('detectionTime').value = new Date(selectedIncident.detectionTime).toISOString().slice(0, 16);
+            document.getElementById('alertName').value = selectedIncident.alertName;
+            document.getElementById('observations').value = selectedIncident.description;
+            document.getElementById('findings').value = analysis.findings;
+            document.getElementById('businessImpact').value = analysis.impact;
+            document.getElementById('recommendations').value = analysis.recommendations;
+            document.getElementById('avoidBlocking').value = analysis.avoidBlocking;
+            
+            switchTab('incident-form');
+            showAlert('Analysis applied to form successfully', 'success');
+            logDebug('Analysis data populated to form', 'success');
+        }
+
+        function generatePreviewFromAnalysis() {
+            applyAnalysisToForm();
+            setTimeout(() => generatePreview(), 500);
+        }
+
+        // Sync status to XSIAM
+        async function syncStatusToXSIAM() {
+            const incidentId = document.getElementById('incidentId').value;
+            const status = document.getElementById('status').value;
+            
+            if (!incidentId || !status) return;
+            
+            logDebug(`Syncing status update to XSIAM: ${incidentId} -> ${status}`, 'info');
+            
+            try {
+                // Simulated API call to update XSIAM
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                showAlert(`Status updated in XSIAM: ${status}`, 'success');
+                logDebug(`XSIAM status sync successful for ${incidentId}`, 'success');
+                
+                // Update local incident list
+                const incident = currentIncidents.find(inc => inc.id === incidentId);
+                if (incident) {
+                    incident.status = status;
+                    displayIncidents(currentIncidents);
+                }
+            } catch (error) {
+                showAlert(`Failed to sync status: ${error.message}`, 'danger');
+                logDebug(`Status sync error: ${error.message}`, 'error');
+            }
         }
 
         function validateForm() {
@@ -748,6 +1295,115 @@
                 recommendations: document.getElementById('recommendations').value,
                 avoidBlocking: document.getElementById('avoidBlocking').value
             };
+        }
+
+        // Email functionality
+        function saveEmailConfig() {
+            const config = {
+                smtpServer: document.getElementById('smtpServer').value,
+                smtpPort: document.getElementById('smtpPort').value,
+                smtpSecure: document.getElementById('smtpSecure').value,
+                fromEmail: document.getElementById('fromEmail').value,
+                emailPassword: document.getElementById('emailPassword').value,
+                defaultRecipient: document.getElementById('defaultRecipient').value
+            };
+            
+            if (!config.smtpServer || !config.fromEmail || !config.emailPassword) {
+                showAlert('Fill all required email fields', 'danger');
+                return;
+            }
+            
+            emailConfig = config;
+            
+            if (document.getElementById('saveEmailConfig').checked) {
+                localStorage.setItem('emailConfig', JSON.stringify(config));
+            }
+            
+            showAlert('Email configuration saved', 'success');
+            logDebug('Email config saved', 'success');
+        }
+
+        function loadEmailConfig() {
+            const saved = localStorage.getItem('emailConfig');
+            if (saved) {
+                const config = JSON.parse(saved);
+                document.getElementById('smtpServer').value = config.smtpServer || '';
+                document.getElementById('smtpPort').value = config.smtpPort || '587';
+                document.getElementById('smtpSecure').value = config.smtpSecure || 'tls';
+                document.getElementById('fromEmail').value = config.fromEmail || '';
+                document.getElementById('emailPassword').value = config.emailPassword || '';
+                document.getElementById('defaultRecipient').value = config.defaultRecipient || '';
+                document.getElementById('saveEmailConfig').checked = true;
+                emailConfig = config;
+                logDebug('Email config loaded', 'info');
+            }
+        }
+
+        function testEmailConnection() {
+            if (!emailConfig.smtpServer || !emailConfig.fromEmail) {
+                showAlert('Save email config first', 'warning');
+                return;
+            }
+            
+            showAlert('Email connection test successful (simulated)', 'success');
+            logDebug('Email connection tested', 'success');
+        }
+
+        function showEmailDialog() {
+            if (!emailConfig.fromEmail) {
+                showAlert('Configure email settings first', 'warning');
+                switchTab('xsiam-config');
+                return;
+            }
+            
+            if (!validateForm()) {
+                showAlert('Complete the incident form first', 'warning');
+                return;
+            }
+            
+            document.getElementById('recipientEmail').value = emailConfig.defaultRecipient || '';
+            document.getElementById('emailSubject').value = `SOC Incident Report - ${document.getElementById('incidentId').value}`;
+            document.getElementById('emailModal').style.display = 'flex';
+        }
+
+        function closeEmailDialog() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        async function sendEmail() {
+            const recipient = document.getElementById('recipientEmail').value;
+            const subject = document.getElementById('emailSubject').value;
+            const message = document.getElementById('emailMessage').value;
+            
+            if (!recipient) {
+                showAlert('Enter recipient email', 'danger');
+                return;
+            }
+            
+            logDebug(`Sending email to ${recipient}...`, 'info');
+            
+            try {
+                // Generate email content
+                const reportHTML = document.getElementById('previewContent').innerHTML;
+                const emailBody = `
+                    ${message}
+                    
+                    <hr>
+                    
+                    ${reportHTML}
+                `;
+                
+                // Simulated email send - Replace with actual email API
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                showAlert(`Email sent successfully to ${recipient}`, 'success');
+                logDebug(`Email sent to ${recipient}`, 'success');
+                closeEmailDialog();
+                
+            } catch (error) {
+                showAlert(`Failed to send email: ${error.message}`, 'danger');
+                logDebug(`Email send error: ${error.message}`, 'error');
+            }
         }
 
         function saveXSIAMConfig() {

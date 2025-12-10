@@ -42,6 +42,26 @@
             color: var(--text-primary); font-size: 13px; min-width: 180px;
         }
         
+        .toggle-switch {
+            position: relative; display: inline-block; width: 50px; height: 24px;
+        }
+        
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s; border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background-color: white;
+            transition: .4s; border-radius: 50%;
+        }
+        
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        
         .tabs {
             display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;
         }
@@ -325,6 +345,95 @@
         .clickable { cursor: pointer; transition: all 0.2s ease; }
         .clickable:hover { color: var(--primary); text-decoration: underline; }
         
+        .data-source-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; background: rgba(255,255,255,0.03);
+            border-radius: 6px; margin-bottom: 6px; font-size: 12px;
+        }
+        
+        .source-name { font-weight: 600; }
+        
+        .source-status {
+            display: flex; align-items: center; gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+        
+        .status-dot.online { background: var(--success); }
+        .status-dot.offline { background: var(--danger); }
+        .status-dot.warning { background: var(--warning); }
+        
+        .mitre-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px; margin-top: 12px;
+        }
+        
+        .mitre-cell {
+            padding: 12px 8px; background: rgba(255,255,255,0.05);
+            border-radius: 6px; text-align: center; border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .mitre-cell.covered {
+            border-color: var(--success); background: rgba(40,167,69,0.1);
+        }
+        
+        .mitre-cell.partial {
+            border-color: var(--warning); background: rgba(255,193,7,0.1);
+        }
+        
+        .mitre-cell .technique {
+            font-size: 10px; font-weight: bold; margin-bottom: 4px;
+        }
+        
+        .mitre-cell .name {
+            font-size: 8px; color: var(--text-secondary);
+        }
+        
+        .threat-item {
+            padding: 12px; background: rgba(220,53,69,0.1);
+            border-left: 3px solid var(--danger); border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .threat-item .title {
+            font-weight: bold; margin-bottom: 5px; font-size: 13px;
+        }
+        
+        .threat-item .meta {
+            font-size: 10px; color: var(--text-secondary);
+        }
+        
+        .asset-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .asset-card {
+            background: rgba(255,255,255,0.05); padding: 12px;
+            border-radius: 6px; border-left: 3px solid var(--info);
+        }
+        
+        .asset-card .asset-name {
+            font-weight: bold; margin-bottom: 6px; font-size: 12px;
+        }
+        
+        .asset-card .asset-status {
+            font-size: 11px; margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            width: 100%; height: 6px; background: rgba(255,255,255,0.1);
+            border-radius: 3px; overflow: hidden; margin-top: 6px;
+        }
+        
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--success), var(--primary));
+            transition: width 0.3s ease;
+        }
+        
         @media (max-width: 1200px) {
             .two-column { grid-template-columns: 1fr; }
             .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
@@ -343,6 +452,12 @@
         
         .saved-customer-item .name { font-weight: bold; margin-bottom: 5px; }
         .saved-customer-item .meta { font-size: 10px; color: var(--text-secondary); }
+        
+        .data-mode-toggle {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 15px; background: rgba(255,255,255,0.05);
+            border-radius: 6px; margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -357,12 +472,22 @@
                 <select id="tenantSelector" onchange="switchTenant()">
                     <option value="all">🌐 All Customers (MSSP View)</option>
                 </select>
-                <button class="btn btn-success" onclick="showOnboardModal()">➕ Onboard Customer</button>
-                <button class="btn btn-danger" onclick="showOffboardModal()">➖ Offboard Customer</button>
+                <button class="btn btn-success" onclick="showOnboardModal()">➕ Onboard</button>
+                <button class="btn btn-danger" onclick="showOffboardModal()">➖ Offboard</button>
             </div>
         </header>
 
         <div id="alert-container"></div>
+
+        <!-- Data Mode Toggle -->
+        <div class="data-mode-toggle">
+            <label style="font-weight: 600; font-size: 12px;">Data Mode:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dataModeToggle" onchange="toggleDataMode()">
+                <span class="slider"></span>
+            </label>
+            <span id="dataModeLabel" style="font-size: 12px; color: var(--warning);">📊 Mock Data (Demo)</span>
+        </div>
 
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 MSSP Dashboard</button>
@@ -370,6 +495,8 @@
             <button class="tab-button" onclick="switchTab('analyst-view')">👨‍💻 Analyst Workspace</button>
             <button class="tab-button" onclick="switchTab('manager-view')">👔 SOC Manager</button>
             <button class="tab-button" onclick="switchTab('incidents')">🚨 Incidents</button>
+            <button class="tab-button" onclick="switchTab('threat-intel')">🔍 Threat Intel</button>
+            <button class="tab-button" onclick="switchTab('cloud-command')">☁️ Cloud Command</button>
             <button class="tab-button" onclick="switchTab('customers')">👥 Customers</button>
         </div>
 
@@ -452,17 +579,26 @@
 
                 <div class="form-section">
                     <h3>📡 Data Sources</h3>
-                    <div class="metric-row">
-                        <span class="metric-label">Total Integrated</span>
-                        <span class="metric-value">12</span>
+                    <div class="data-source-item">
+                        <span class="source-name">Palo Alto Firewall</span>
+                        <div class="source-status">
+                            <span class="status-dot online"></span>
+                            <span>Online</span>
+                        </div>
                     </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Online</span>
-                        <span class="metric-value">11</span>
+                    <div class="data-source-item">
+                        <span class="source-name">Microsoft Defender</span>
+                        <div class="source-status">
+                            <span class="status-dot online"></span>
+                            <span>Online</span>
+                        </div>
                     </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Issues</span>
-                        <span class="metric-value" style="color: var(--warning);">1</span>
+                    <div class="data-source-item">
+                        <span class="source-name">AWS CloudTrail</span>
+                        <div class="source-status">
+                            <span class="status-dot warning"></span>
+                            <span>Delayed</span>
+                        </div>
                     </div>
                 </div>
 
@@ -479,6 +615,88 @@
                     <div class="metric-row">
                         <span class="metric-label">Time Saved</span>
                         <span class="metric-value">82%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MITRE ATT&CK Coverage -->
+            <div class="form-section">
+                <h3>🎯 MITRE ATT&CK Coverage</h3>
+                <div style="display: flex; gap: 30px; margin-bottom: 15px;">
+                    <div>
+                        <div style="font-size: 42px; font-weight: bold; color: var(--success);">78%</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Overall Coverage</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="metric-row">
+                            <span class="metric-label">Covered Techniques</span>
+                            <span class="metric-value">142 / 182</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Partial Coverage</span>
+                            <span class="metric-value" style="color: var(--warning);">23</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">No Coverage</span>
+                            <span class="metric-value" style="color: var(--danger);">17</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mitre-grid">
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1059</div>
+                        <div class="name">Command Script</div>
+                    </div>
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1003</div>
+                        <div class="name">Credential Dump</div>
+                    </div>
+                    <div class="mitre-cell partial">
+                        <div class="technique">T1486</div>
+                        <div class="name">Data Encrypted</div>
+                    </div>
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1566</div>
+                        <div class="name">Phishing</div>
+                    </div>
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1078</div>
+                        <div class="name">Valid Accounts</div>
+                    </div>
+                    <div class="mitre-cell partial">
+                        <div class="technique">T1190</div>
+                        <div class="name">Exploit Public</div>
+                    </div>
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1110</div>
+                        <div class="name">Brute Force</div>
+                    </div>
+                    <div class="mitre-cell covered">
+                        <div class="technique">T1071</div>
+                        <div class="name">App Layer</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attack Surface -->
+            <div class="form-section">
+                <h3>🌐 Attack Surface Exposure</h3>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                    <div style="text-align: center; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--danger);">12</div>
+                        <div style="font-size: 10px; margin-top: 4px;">Critical Exposures</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--warning);">34</div>
+                        <div style="font-size: 10px; margin-top: 4px;">High Risk Assets</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: rgba(23,162,184,0.1); border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--info);">156</div>
+                        <div style="font-size: 10px; margin-top: 4px;">Internet-Facing</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--success);">89%</div>
+                        <div style="font-size: 10px; margin-top: 4px;">Patched Systems</div>
                     </div>
                 </div>
             </div>
@@ -568,6 +786,151 @@
                 <div class="form-section">
                     <h3>🤖 AI Analysis & Recommendations</h3>
                     <div id="analysisResults"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threat Intel -->
+        <div id="threat-intel" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">🔍 Threat Intelligence Feed</h2>
+
+            <div class="form-section">
+                <h3>🚨 Critical Threats Released (Last 7 Days)</h3>
+                <div class="threat-item">
+                    <div class="title">CVE-2025-12345: Critical RCE in Apache Struts</div>
+                    <div class="meta">Severity: Critical | CVSS: 9.8 | Published: 2 days ago</div>
+                    <div style="margin-top: 6px; font-size: 11px;">
+                        Remote code execution vulnerability affecting Apache Struts 2.x. Immediate patching recommended.
+                    </div>
+                </div>
+                <div class="threat-item">
+                    <div class="title">LockBit 4.0 Ransomware Campaign Targeting Healthcare</div>
+                    <div class="meta">Severity: Critical | Category: Ransomware | Published: 3 days ago</div>
+                    <div style="margin-top: 6px; font-size: 11px;">
+                        New variant with improved encryption. Targeting healthcare sector via phishing campaigns.
+                    </div>
+                </div>
+                <div class="threat-item">
+                    <div class="title">Zero-Day in Microsoft Exchange Server</div>
+                    <div class="meta">Severity: Critical | CVSS: 9.1 | Published: 5 days ago</div>
+                    <div style="margin-top: 6px; font-size: 11px;">
+                        Authentication bypass leading to remote code execution. Patch available.
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-section">
+                    <h3>IOC Feed Statistics</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Malicious IPs (Last 24h)</span>
+                        <span class="metric-value">1,247</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Malicious Domains</span>
+                        <span class="metric-value">892</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">File Hashes (Malware)</span>
+                        <span class="metric-value">3,456</span>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Threat Actor Activity</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">APT Groups Monitored</span>
+                        <span class="metric-value">45</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Active Campaigns</span>
+                        <span class="metric-value">12</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Ransomware Families</span>
+                        <span class="metric-value">28</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cloud Command -->
+        <div id="cloud-command" class="tab-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
+                ☁️ Cloud Command Center - <span id="cloudTenantName">Select Customer</span>
+            </h2>
+
+            <div class="dashboard-grid">
+                <div class="widget">
+                    <h3>AWS Assets</h3>
+                    <div class="widget-value">342</div>
+                    <div class="widget-label">Total Resources</div>
+                    <div style="margin-top: 8px; font-size: 11px;">
+                        <span style="color: var(--danger);">12 Critical Issues</span>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h3>Azure Assets</h3>
+                    <div class="widget-value">218</div>
+                    <div class="widget-label">Total Resources</div>
+                    <div style="margin-top: 8px; font-size: 11px;">
+                        <span style="color: var(--warning);">8 High Issues</span>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h3>GCP Assets</h3>
+                    <div class="widget-value">156</div>
+                    <div class="widget-label">Total Resources</div>
+                    <div style="margin-top: 8px; font-size: 11px;">
+                        <span style="color: var(--warning);">5 Medium Issues</span>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h3>Compliance Score</h3>
+                    <div class="widget-value" style="color: var(--success);">87%</div>
+                    <div class="widget-label">Overall Posture</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-section">
+                    <h3>AWS Resources & Issues</h3>
+                    <div class="asset-grid">
+                        <div class="asset-card">
+                            <div class="asset-name">EC2 Instances</div>
+                            <div class="asset-status">Count: 45 | Issues: 3</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 93%;"></div>
+                            </div>
+                        </div>
+                        <div class="asset-card">
+                            <div class="asset-name">S3 Buckets</div>
+                            <div class="asset-status">Count: 28 | Issues: 5</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Azure Resources & Issues</h3>
+                    <div class="asset-grid">
+                        <div class="asset-card">
+                            <div class="asset-name">Virtual Machines</div>
+                            <div class="asset-status">Count: 32 | Issues: 2</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 94%;"></div>
+                            </div>
+                        </div>
+                        <div class="asset-card">
+                            <div class="asset-name">Storage Accounts</div>
+                            <div class="asset-status">Count: 18 | Issues: 3</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 83%;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -729,15 +1092,89 @@
 
     <script>
         // Global state
-        let customers = JSON.parse(localStorage.getItem('mssp_customers') || '{}');
+        let customers = {};
         let currentTenant = 'all';
         let currentIncident = null;
+        let useMockData = true;
+
+        // Mock data for demo
+        const mockCustomers = {
+            'acme': {
+                name: 'Acme Corporation', industry: 'technology', size: 'large',
+                status: 'active', onboardedDate: new Date(Date.now() - 90*24*60*60*1000).toISOString(),
+                incidents: { critical: 8, high: 15, medium: 23, low: 12 },
+                mttr: '2.3h', autoResolved: '82%', dataSources: 12,
+                contactEmail: 'security@acme.com', xsiamUrl: 'https://acme.xsiam.paloaltonetworks.com',
+                db: 'mongodb://acme-db:27017/acme'
+            },
+            'techcorp': {
+                name: 'TechCorp Industries', industry: 'technology', size: 'enterprise',
+                status: 'active', onboardedDate: new Date(Date.now() - 60*24*60*60*1000).toISOString(),
+                incidents: { critical: 3, high: 9, medium: 18, low: 8 },
+                mttr: '1.8h', autoResolved: '85%', dataSources: 15,
+                contactEmail: 'soc@techcorp.com', xsiamUrl: 'https://techcorp.xsiam.paloaltonetworks.com',
+                db: 'mongodb://techcorp-db:27017/techcorp'
+            },
+            'globalbank': {
+                name: 'Global Bank Ltd', industry: 'finance', size: 'enterprise',
+                status: 'active', onboardedDate: new Date(Date.now() - 120*24*60*60*1000).toISOString(),
+                incidents: { critical: 5, high: 12, medium: 28, low: 15 },
+                mttr: '3.1h', autoResolved: '75%', dataSources: 18,
+                contactEmail: 'security@globalbank.com', xsiamUrl: 'https://globalbank.xsiam.paloaltonetworks.com',
+                db: 'mongodb://globalbank-db:27017/globalbank'
+            }
+        };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadCustomers();
+            loadCustomersFromStorage();
             updateDashboard();
         });
+
+        function loadCustomersFromStorage() {
+            const stored = localStorage.getItem('mssp_customers');
+            if (stored) {
+                try {
+                    customers = JSON.parse(stored);
+                    console.log('Loaded customers from storage:', customers);
+                } catch (e) {
+                    console.error('Error parsing stored customers:', e);
+                    customers = {};
+                }
+            }
+            
+            // If no real customers and mock mode, use mock data
+            if (Object.keys(customers).length === 0 && useMockData) {
+                customers = {...mockCustomers};
+            }
+            
+            loadCustomers();
+        }
+
+        function toggleDataMode() {
+            useMockData = document.getElementById('dataModeToggle').checked;
+            const label = document.getElementById('dataModeLabel');
+            
+            if (useMockData) {
+                label.innerHTML = '✅ Real Data (Live)';
+                label.style.color = 'var(--success)';
+                // Load real customers from storage
+                const stored = localStorage.getItem('mssp_customers');
+                if (stored) {
+                    customers = JSON.parse(stored);
+                } else {
+                    customers = {};
+                }
+            } else {
+                label.innerHTML = '📊 Mock Data (Demo)';
+                label.style.color = 'var(--warning)';
+                // Use mock data
+                customers = {...mockCustomers};
+            }
+            
+            loadCustomers();
+            updateDashboard();
+        }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -759,6 +1196,8 @@
             // Clear existing options except "All Customers"
             selector.innerHTML = '<option value="all">🌐 All Customers (MSSP View)</option>';
             offboardSelect.innerHTML = '<option value="">Choose customer...</option>';
+            
+            console.log('Loading customers:', customers);
             
             Object.keys(customers).forEach(id => {
                 const customer = customers[id];
@@ -784,7 +1223,7 @@
             const activeCustomers = Object.entries(customers).filter(([id, c]) => c.status === 'active');
             
             if (activeCustomers.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customers onboarded yet. Click "Onboard Customer" to add your first customer.</p>';
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customers onboarded yet. Click "Onboard" to add your first customer or toggle to Mock Data to see demo.</p>';
                 return;
             }
             
@@ -867,6 +1306,7 @@
             document.getElementById('analystTenantName').textContent = tenantName;
             document.getElementById('managerTenantName').textContent = tenantName;
             document.getElementById('incidentTenantName').textContent = tenantName;
+            document.getElementById('cloudTenantName').textContent = tenantName;
             
             if (currentTenant !== 'all') {
                 loadIncidents(currentTenant);
@@ -915,7 +1355,7 @@
                 </div>
             `).join('');
             
-            container.innerHTML = html;
+            if (container) container.innerHTML = html;
             if (queueContainer) queueContainer.innerHTML = html;
         }
 
@@ -1099,8 +1539,8 @@ CRITICAL - DO NOT BLOCK:
         }
 
         function showOffboardModal() {
-            if (Object.keys(customers).length === 0) {
-                showAlert('No customers to offboard', 'warning');
+            if (Object.keys(customers).filter(k => customers[k].status === 'active').length === 0) {
+                showAlert('No active customers to offboard', 'warning');
                 return;
             }
             document.getElementById('offboardModal').classList.add('show');
@@ -1147,6 +1587,8 @@ CRITICAL - DO NOT BLOCK:
             };
             
             localStorage.setItem('mssp_customers', JSON.stringify(customers));
+            console.log('Customer onboarded:', customers[id]);
+            
             loadCustomers();
             updateDashboard();
             closeOnboardModal();
@@ -1155,6 +1597,8 @@ CRITICAL - DO NOT BLOCK:
             // Clear form
             document.getElementById('onboardName').value = '';
             document.getElementById('onboardId').value = '';
+            document.getElementById('onboardIndustry').value = '';
+            document.getElementById('onboardSize').value = '';
             document.getElementById('onboardXsiamUrl').value = '';
             document.getElementById('onboardDb').value = '';
             document.getElementById('onboardApiKeyId').value = '';

@@ -62,6 +62,31 @@
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(26px); }
         
+        .sync-controls {
+            background: var(--card-bg); padding: 15px 20px; border-radius: 8px;
+            margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+            border-left: 4px solid var(--success);
+        }
+        
+        .sync-status {
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .sync-indicator {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--success); animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .sync-indicator.inactive {
+            background: var(--danger); animation: none;
+        }
+        
         .tabs {
             display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;
         }
@@ -101,7 +126,7 @@
             background: var(--card-bg); padding: 18px; border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border-left: 4px solid var(--primary); cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease; position: relative;
         }
         
         .widget:hover {
@@ -112,6 +137,12 @@
         .widget h3 { font-size: 14px; margin-bottom: 12px; color: var(--primary); }
         .widget-value { font-size: 32px; font-weight: bold; margin-bottom: 8px; }
         .widget-label { font-size: 11px; color: var(--text-secondary); }
+        
+        .last-updated {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 9px; color: var(--text-secondary);
+            background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px;
+        }
         
         .severity-breakdown {
             display: flex; gap: 8px; margin-top: 12px;
@@ -269,7 +300,7 @@
         
         .modal {
             display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
             z-index: 1000; align-items: center; justify-content: center;
             overflow-y: auto; padding: 20px;
         }
@@ -297,32 +328,140 @@
         }
         
         .preview-section {
-            background: white; color: #000; padding: 25px;
-            border-radius: 8px; margin-top: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #000; padding: 40px;
+            border-radius: 12px; margin-top: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            border: 3px solid var(--primary);
         }
         
-        .preview-section h2 {
-            color: var(--primary); border-bottom: 3px solid var(--primary);
-            padding-bottom: 10px; margin-bottom: 15px; font-size: 20px;
+        .preview-header {
+            text-align: center; margin-bottom: 30px;
+            padding-bottom: 20px; border-bottom: 3px solid var(--primary);
         }
         
-        .preview-section h3 {
-            color: var(--secondary); margin-top: 20px;
-            margin-bottom: 12px; font-size: 16px;
+        .preview-header h1 {
+            color: var(--primary); font-size: 28px; margin-bottom: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
         }
         
-        .preview-section table {
-            width: 100%; border-collapse: collapse; margin: 12px 0;
+        .preview-header .subtitle {
+            color: #666; font-size: 14px; font-style: italic;
         }
         
-        .preview-section table th, .preview-section table td {
-            padding: 10px; border: 1px solid #ddd; text-align: left;
-            font-size: 13px;
+        .executive-summary {
+            background: linear-gradient(135deg, rgba(0,102,204,0.1) 0%, rgba(0,102,204,0.05) 100%);
+            padding: 25px; border-radius: 10px; margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
         }
         
-        .preview-section table th {
-            background: var(--primary); color: white; font-weight: 600;
+        .executive-summary h2 {
+            color: var(--primary); font-size: 20px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .severity-indicator {
+            display: inline-block; padding: 8px 20px; border-radius: 20px;
+            font-weight: bold; font-size: 14px; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .severity-critical {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white; box-shadow: 0 4px 12px rgba(220,53,69,0.4);
+        }
+        
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin: 20px 0;
+        }
+        
+        .info-card {
+            background: white; padding: 15px; border-radius: 8px;
+            border: 2px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .info-card .label {
+            font-size: 11px; color: #666; text-transform: uppercase;
+            font-weight: 600; margin-bottom: 5px;
+        }
+        
+        .info-card .value {
+            font-size: 16px; color: #000; font-weight: bold;
+        }
+        
+        .section-block {
+            background: white; padding: 25px; border-radius: 10px;
+            margin-bottom: 20px; border-left: 5px solid var(--info);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .section-block h3 {
+            color: var(--secondary); font-size: 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .section-block p, .section-block ul {
+            color: #333; font-size: 14px; line-height: 1.8;
+        }
+        
+        .section-block ul {
+            margin-left: 20px; margin-top: 10px;
+        }
+        
+        .section-block li {
+            margin-bottom: 8px;
+        }
+        
+        .impact-box {
+            background: linear-gradient(135deg, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0.05) 100%);
+            padding: 20px; border-radius: 8px; border-left: 5px solid var(--danger);
+            margin: 15px 0;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, rgba(40,167,69,0.1) 0%, rgba(40,167,69,0.05) 100%);
+            padding: 20px; border-radius: 8px; border-left: 5px solid var(--success);
+            margin: 15px 0;
+        }
+        
+        .action-steps {
+            counter-reset: step-counter;
+            list-style: none; margin-left: 0;
+        }
+        
+        .action-steps li {
+            counter-increment: step-counter;
+            margin-bottom: 15px; padding-left: 40px; position: relative;
+        }
+        
+        .action-steps li:before {
+            content: counter(step-counter);
+            position: absolute; left: 0; top: 0;
+            background: var(--primary); color: white;
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px;
+        }
+        
+        .artifact-section {
+            background: #f8f9fa; padding: 15px; border-radius: 8px;
+            margin: 15px 0; border: 2px solid #dee2e6;
+        }
+        
+        .artifact-section h4 {
+            color: var(--secondary); font-size: 14px; margin-bottom: 10px;
+        }
+        
+        .artifact-item {
+            background: white; padding: 10px; border-radius: 6px;
+            margin-bottom: 8px; font-family: 'Courier New', monospace;
+            font-size: 12px; border-left: 3px solid var(--info);
+        }
+        
+        .footer-section {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 2px solid #dee2e6; color: #666; font-size: 11px;
         }
         
         .loading-spinner {
@@ -341,9 +480,6 @@
         
         .metric-label { font-weight: 600; }
         .metric-value { font-weight: bold; color: var(--success); }
-        
-        .clickable { cursor: pointer; transition: all 0.2s ease; }
-        .clickable:hover { color: var(--primary); text-decoration: underline; }
         
         .data-source-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -365,93 +501,10 @@
         .status-dot.offline { background: var(--danger); }
         .status-dot.warning { background: var(--warning); }
         
-        .mitre-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 8px; margin-top: 12px;
-        }
-        
-        .mitre-cell {
-            padding: 12px 8px; background: rgba(255,255,255,0.05);
-            border-radius: 6px; text-align: center; border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .mitre-cell.covered {
-            border-color: var(--success); background: rgba(40,167,69,0.1);
-        }
-        
-        .mitre-cell.partial {
-            border-color: var(--warning); background: rgba(255,193,7,0.1);
-        }
-        
-        .mitre-cell .technique {
-            font-size: 10px; font-weight: bold; margin-bottom: 4px;
-        }
-        
-        .mitre-cell .name {
-            font-size: 8px; color: var(--text-secondary);
-        }
-        
-        .threat-item {
-            padding: 12px; background: rgba(220,53,69,0.1);
-            border-left: 3px solid var(--danger); border-radius: 6px;
-            margin-bottom: 10px;
-        }
-        
-        .threat-item .title {
-            font-weight: bold; margin-bottom: 5px; font-size: 13px;
-        }
-        
-        .threat-item .meta {
-            font-size: 10px; color: var(--text-secondary);
-        }
-        
-        .asset-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-        
-        .asset-card {
-            background: rgba(255,255,255,0.05); padding: 12px;
-            border-radius: 6px; border-left: 3px solid var(--info);
-        }
-        
-        .asset-card .asset-name {
-            font-weight: bold; margin-bottom: 6px; font-size: 12px;
-        }
-        
-        .asset-card .asset-status {
-            font-size: 11px; margin-bottom: 5px;
-        }
-        
-        .progress-bar {
-            width: 100%; height: 6px; background: rgba(255,255,255,0.1);
-            border-radius: 3px; overflow: hidden; margin-top: 6px;
-        }
-        
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--success), var(--primary));
-            transition: width 0.3s ease;
-        }
-        
         @media (max-width: 1200px) {
             .two-column { grid-template-columns: 1fr; }
             .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
         }
-        
-        .saved-customers-list {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px; margin-top: 15px;
-        }
-        
-        .saved-customer-item {
-            background: rgba(255,255,255,0.05); padding: 12px;
-            border-radius: 6px; border-left: 3px solid var(--success);
-            font-size: 12px;
-        }
-        
-        .saved-customer-item .name { font-weight: bold; margin-bottom: 5px; }
-        .saved-customer-item .meta { font-size: 10px; color: var(--text-secondary); }
         
         .data-mode-toggle {
             display: flex; align-items: center; gap: 10px;
@@ -479,6 +532,36 @@
 
         <div id="alert-container"></div>
 
+        <!-- Auto-Sync Controls -->
+        <div class="sync-controls">
+            <div class="sync-status">
+                <div class="sync-indicator" id="syncIndicator"></div>
+                <span style="font-weight: 600; font-size: 13px;">Auto-Sync:</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoSyncToggle" checked onchange="toggleAutoSync()">
+                    <span class="slider"></span>
+                </label>
+                <span id="syncStatusText" style="font-size: 12px; color: var(--success);">Active</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label style="font-size: 12px; font-weight: 600;">Interval:</label>
+                <select id="syncInterval" onchange="updateSyncInterval()" style="padding: 6px 10px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
+                    <option value="10">10 seconds</option>
+                    <option value="30" selected>30 seconds</option>
+                    <option value="60">1 minute</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" onclick="fetchLiveCases()">🔄 Fetch Now</button>
+            
+            <div style="font-size: 11px; color: var(--text-secondary);">
+                Last sync: <span id="lastSyncTime">Never</span>
+            </div>
+        </div>
+
         <!-- Data Mode Toggle -->
         <div class="data-mode-toggle">
             <label style="font-weight: 600; font-size: 12px;">Data Mode:</label>
@@ -493,10 +576,8 @@
             <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 MSSP Dashboard</button>
             <button class="tab-button" onclick="switchTab('ciso-dashboard')">📊 CISO Dashboard</button>
             <button class="tab-button" onclick="switchTab('analyst-view')">👨‍💻 Analyst Workspace</button>
-            <button class="tab-button" onclick="switchTab('manager-view')">👔 SOC Manager</button>
             <button class="tab-button" onclick="switchTab('incidents')">🚨 Incidents</button>
-            <button class="tab-button" onclick="switchTab('threat-intel')">🔍 Threat Intel</button>
-            <button class="tab-button" onclick="switchTab('cloud-command')">☁️ Cloud Command</button>
+            <button class="tab-button" onclick="switchTab('integrations')">🔌 Integrations</button>
             <button class="tab-button" onclick="switchTab('customers')">👥 Customers</button>
         </div>
 
@@ -506,21 +587,25 @@
             
             <div class="dashboard-grid">
                 <div class="widget" onclick="navigateToCustomers()">
+                    <div class="last-updated" id="customersLastUpdate">Just now</div>
                     <h3>Total Customers</h3>
                     <div class="widget-value" id="totalCustomers">0</div>
                     <div class="widget-label">Active Tenants</div>
                 </div>
                 <div class="widget" onclick="navigateToIncidents()">
+                    <div class="last-updated" id="incidentsLastUpdate">Just now</div>
                     <h3>Total Incidents</h3>
                     <div class="widget-value" id="totalIncidents">0</div>
                     <div class="widget-label">Across All Customers</div>
                 </div>
                 <div class="widget" onclick="navigateToCritical()">
+                    <div class="last-updated" id="criticalLastUpdate">Just now</div>
                     <h3>Critical Alerts</h3>
                     <div class="widget-value critical" id="criticalAlerts">0</div>
                     <div class="widget-label">Requires Immediate Action</div>
                 </div>
                 <div class="widget">
+                    <div class="last-updated" id="automationLastUpdate">Just now</div>
                     <h3>Automation Rate</h3>
                     <div class="widget-value" style="color: var(--success);" id="automationRate">0%</div>
                     <div class="widget-label">Auto-Resolved Cases</div>
@@ -559,147 +644,6 @@
                     <div class="kpi-trend trend-up">↑ 5% this quarter</div>
                 </div>
             </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 15px;">
-                <div class="form-section">
-                    <h3>🎯 Security Posture</h3>
-                    <div class="metric-row">
-                        <span class="metric-label">Overall Health Score</span>
-                        <span class="metric-value">87/100</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Active Threats</span>
-                        <span class="metric-value" style="color: var(--danger);">23</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Compliance Status</span>
-                        <span class="metric-value">92%</span>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>📡 Data Sources</h3>
-                    <div class="data-source-item">
-                        <span class="source-name">Palo Alto Firewall</span>
-                        <div class="source-status">
-                            <span class="status-dot online"></span>
-                            <span>Online</span>
-                        </div>
-                    </div>
-                    <div class="data-source-item">
-                        <span class="source-name">Microsoft Defender</span>
-                        <div class="source-status">
-                            <span class="status-dot online"></span>
-                            <span>Online</span>
-                        </div>
-                    </div>
-                    <div class="data-source-item">
-                        <span class="source-name">AWS CloudTrail</span>
-                        <div class="source-status">
-                            <span class="status-dot warning"></span>
-                            <span>Delayed</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>🤖 Automation</h3>
-                    <div class="metric-row">
-                        <span class="metric-label">Playbooks Active</span>
-                        <span class="metric-value">45</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Success Rate</span>
-                        <span class="metric-value">95.3%</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Time Saved</span>
-                        <span class="metric-value">82%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MITRE ATT&CK Coverage -->
-            <div class="form-section">
-                <h3>🎯 MITRE ATT&CK Coverage</h3>
-                <div style="display: flex; gap: 30px; margin-bottom: 15px;">
-                    <div>
-                        <div style="font-size: 42px; font-weight: bold; color: var(--success);">78%</div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">Overall Coverage</div>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="metric-row">
-                            <span class="metric-label">Covered Techniques</span>
-                            <span class="metric-value">142 / 182</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Partial Coverage</span>
-                            <span class="metric-value" style="color: var(--warning);">23</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">No Coverage</span>
-                            <span class="metric-value" style="color: var(--danger);">17</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mitre-grid">
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1059</div>
-                        <div class="name">Command Script</div>
-                    </div>
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1003</div>
-                        <div class="name">Credential Dump</div>
-                    </div>
-                    <div class="mitre-cell partial">
-                        <div class="technique">T1486</div>
-                        <div class="name">Data Encrypted</div>
-                    </div>
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1566</div>
-                        <div class="name">Phishing</div>
-                    </div>
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1078</div>
-                        <div class="name">Valid Accounts</div>
-                    </div>
-                    <div class="mitre-cell partial">
-                        <div class="technique">T1190</div>
-                        <div class="name">Exploit Public</div>
-                    </div>
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1110</div>
-                        <div class="name">Brute Force</div>
-                    </div>
-                    <div class="mitre-cell covered">
-                        <div class="technique">T1071</div>
-                        <div class="name">App Layer</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attack Surface -->
-            <div class="form-section">
-                <h3>🌐 Attack Surface Exposure</h3>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-                    <div style="text-align: center; padding: 12px; background: rgba(220,53,69,0.1); border-radius: 6px;">
-                        <div style="font-size: 24px; font-weight: bold; color: var(--danger);">12</div>
-                        <div style="font-size: 10px; margin-top: 4px;">Critical Exposures</div>
-                    </div>
-                    <div style="text-align: center; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 6px;">
-                        <div style="font-size: 24px; font-weight: bold; color: var(--warning);">34</div>
-                        <div style="font-size: 10px; margin-top: 4px;">High Risk Assets</div>
-                    </div>
-                    <div style="text-align: center; padding: 12px; background: rgba(23,162,184,0.1); border-radius: 6px;">
-                        <div style="font-size: 24px; font-weight: bold; color: var(--info);">156</div>
-                        <div style="font-size: 10px; margin-top: 4px;">Internet-Facing</div>
-                    </div>
-                    <div style="text-align: center; padding: 12px; background: rgba(40,167,69,0.1); border-radius: 6px;">
-                        <div style="font-size: 24px; font-weight: bold; color: var(--success);">89%</div>
-                        <div style="font-size: 10px; margin-top: 4px;">Patched Systems</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Analyst Workspace -->
@@ -725,52 +669,6 @@
             </div>
         </div>
 
-        <!-- SOC Manager View -->
-        <div id="manager-view" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                SOC Manager Dashboard - <span id="managerTenantName">Select Customer</span>
-            </h2>
-
-            <div class="dashboard-grid">
-                <div class="widget">
-                    <h3>Team Performance</h3>
-                    <div class="widget-value">94%</div>
-                    <div class="widget-label">SLA Compliance</div>
-                </div>
-                <div class="widget">
-                    <h3>Pending Cases</h3>
-                    <div class="widget-value">23</div>
-                    <div class="widget-label">In Queue</div>
-                </div>
-                <div class="widget">
-                    <h3>Avg Resolution Time</h3>
-                    <div class="widget-value">2.3h</div>
-                    <div class="widget-label">MTTR</div>
-                </div>
-                <div class="widget">
-                    <h3>Analyst Efficiency</h3>
-                    <div class="widget-value">87%</div>
-                    <div class="widget-label">Productivity Score</div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>📊 Team Workload Distribution</h3>
-                <div class="metric-row">
-                    <span class="metric-label">Analyst 1 - John Doe</span>
-                    <span class="metric-value">8 cases</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Analyst 2 - Jane Smith</span>
-                    <span class="metric-value">6 cases</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Analyst 3 - Mike Johnson</span>
-                    <span class="metric-value">9 cases</span>
-                </div>
-            </div>
-        </div>
-
         <!-- Incidents Tab -->
         <div id="incidents" class="tab-content">
             <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
@@ -790,149 +688,13 @@
             </div>
         </div>
 
-        <!-- Threat Intel -->
-        <div id="threat-intel" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">🔍 Threat Intelligence Feed</h2>
-
-            <div class="form-section">
-                <h3>🚨 Critical Threats Released (Last 7 Days)</h3>
-                <div class="threat-item">
-                    <div class="title">CVE-2025-12345: Critical RCE in Apache Struts</div>
-                    <div class="meta">Severity: Critical | CVSS: 9.8 | Published: 2 days ago</div>
-                    <div style="margin-top: 6px; font-size: 11px;">
-                        Remote code execution vulnerability affecting Apache Struts 2.x. Immediate patching recommended.
-                    </div>
-                </div>
-                <div class="threat-item">
-                    <div class="title">LockBit 4.0 Ransomware Campaign Targeting Healthcare</div>
-                    <div class="meta">Severity: Critical | Category: Ransomware | Published: 3 days ago</div>
-                    <div style="margin-top: 6px; font-size: 11px;">
-                        New variant with improved encryption. Targeting healthcare sector via phishing campaigns.
-                    </div>
-                </div>
-                <div class="threat-item">
-                    <div class="title">Zero-Day in Microsoft Exchange Server</div>
-                    <div class="meta">Severity: Critical | CVSS: 9.1 | Published: 5 days ago</div>
-                    <div style="margin-top: 6px; font-size: 11px;">
-                        Authentication bypass leading to remote code execution. Patch available.
-                    </div>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="form-section">
-                    <h3>IOC Feed Statistics</h3>
-                    <div class="metric-row">
-                        <span class="metric-label">Malicious IPs (Last 24h)</span>
-                        <span class="metric-value">1,247</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Malicious Domains</span>
-                        <span class="metric-value">892</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">File Hashes (Malware)</span>
-                        <span class="metric-value">3,456</span>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Threat Actor Activity</h3>
-                    <div class="metric-row">
-                        <span class="metric-label">APT Groups Monitored</span>
-                        <span class="metric-value">45</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Active Campaigns</span>
-                        <span class="metric-value">12</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-label">Ransomware Families</span>
-                        <span class="metric-value">28</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cloud Command -->
-        <div id="cloud-command" class="tab-content">
+        <!-- Integrations Tab -->
+        <div id="integrations" class="tab-content">
             <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                ☁️ Cloud Command Center - <span id="cloudTenantName">Select Customer</span>
+                Integration Health Monitor - <span id="integrationTenantName">All Customers</span>
             </h2>
 
-            <div class="dashboard-grid">
-                <div class="widget">
-                    <h3>AWS Assets</h3>
-                    <div class="widget-value">342</div>
-                    <div class="widget-label">Total Resources</div>
-                    <div style="margin-top: 8px; font-size: 11px;">
-                        <span style="color: var(--danger);">12 Critical Issues</span>
-                    </div>
-                </div>
-                <div class="widget">
-                    <h3>Azure Assets</h3>
-                    <div class="widget-value">218</div>
-                    <div class="widget-label">Total Resources</div>
-                    <div style="margin-top: 8px; font-size: 11px;">
-                        <span style="color: var(--warning);">8 High Issues</span>
-                    </div>
-                </div>
-                <div class="widget">
-                    <h3>GCP Assets</h3>
-                    <div class="widget-value">156</div>
-                    <div class="widget-label">Total Resources</div>
-                    <div style="margin-top: 8px; font-size: 11px;">
-                        <span style="color: var(--warning);">5 Medium Issues</span>
-                    </div>
-                </div>
-                <div class="widget">
-                    <h3>Compliance Score</h3>
-                    <div class="widget-value" style="color: var(--success);">87%</div>
-                    <div class="widget-label">Overall Posture</div>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="form-section">
-                    <h3>AWS Resources & Issues</h3>
-                    <div class="asset-grid">
-                        <div class="asset-card">
-                            <div class="asset-name">EC2 Instances</div>
-                            <div class="asset-status">Count: 45 | Issues: 3</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 93%;"></div>
-                            </div>
-                        </div>
-                        <div class="asset-card">
-                            <div class="asset-name">S3 Buckets</div>
-                            <div class="asset-status">Count: 28 | Issues: 5</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 82%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Azure Resources & Issues</h3>
-                    <div class="asset-grid">
-                        <div class="asset-card">
-                            <div class="asset-name">Virtual Machines</div>
-                            <div class="asset-status">Count: 32 | Issues: 2</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 94%;"></div>
-                            </div>
-                        </div>
-                        <div class="asset-card">
-                            <div class="asset-name">Storage Accounts</div>
-                            <div class="asset-status">Count: 18 | Issues: 3</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 83%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="dashboard-grid" id="integrationWidgets"></div>
         </div>
 
         <!-- Customers Tab -->
@@ -946,7 +708,7 @@
         </div>
     </div>
 
-    <!-- Onboard Customer Modal -->
+    <!-- Onboard Modal (keeping existing) -->
     <div id="onboardModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -974,30 +736,11 @@
                         <option value="healthcare">Healthcare</option>
                         <option value="retail">Retail</option>
                         <option value="technology">Technology</option>
-                        <option value="manufacturing">Manufacturing</option>
-                        <option value="government">Government</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Company Size</label>
-                    <select id="onboardSize">
-                        <option value="">Select Size</option>
-                        <option value="small">Small (1-100)</option>
-                        <option value="medium">Medium (101-1000)</option>
-                        <option value="large">Large (1001-10000)</option>
-                        <option value="enterprise">Enterprise (10000+)</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-row">
                 <div class="form-group">
                     <label>XSIAM Instance URL *</label>
                     <input type="url" id="onboardXsiamUrl" placeholder="https://tenant.xsiam.paloaltonetworks.com">
-                </div>
-                <div class="form-group">
-                    <label>Database Connection *</label>
-                    <input type="text" id="onboardDb" placeholder="mongodb://tenant-db:27017/customer_db">
                 </div>
             </div>
             
@@ -1012,31 +755,19 @@
                 </div>
             </div>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Primary Contact Name</label>
-                    <input type="text" id="onboardContactName" placeholder="John Doe">
-                </div>
-                <div class="form-group">
-                    <label>Primary Contact Email</label>
-                    <input type="email" id="onboardContactEmail" placeholder="john.doe@company.com">
-                </div>
-            </div>
-            
             <div class="form-group">
-                <label>Notes</label>
-                <textarea id="onboardNotes" rows="3" placeholder="Additional information about the customer..."></textarea>
+                <label>Primary Contact Email</label>
+                <input type="email" id="onboardContactEmail" placeholder="security@company.com">
             </div>
             
             <div class="button-group">
                 <button class="btn btn-success" onclick="onboardCustomer()">✓ Onboard Customer</button>
-                <button class="btn btn-info" onclick="testConnection()">🔌 Test Connection</button>
                 <button class="btn btn-danger" onclick="closeOnboardModal()">✕ Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Offboard Customer Modal -->
+    <!-- Offboard Modal (keeping existing) -->
     <div id="offboardModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1051,19 +782,6 @@
                 </select>
             </div>
             
-            <div class="form-group">
-                <label>Reason for Offboarding</label>
-                <textarea id="offboardReason" rows="4" placeholder="Contract ended, migration to in-house SOC, etc."></textarea>
-            </div>
-            
-            <div style="background: rgba(220,53,69,0.1); padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid var(--danger);">
-                <strong style="color: var(--danger);">⚠️ Warning:</strong>
-                <p style="margin-top: 8px; font-size: 12px;">
-                    Offboarding will deactivate the customer but preserve all historical data.
-                    This action can be reversed by re-onboarding the customer.
-                </p>
-            </div>
-            
             <div class="button-group">
                 <button class="btn btn-danger" onclick="offboardCustomer()">➖ Offboard Customer</button>
                 <button class="btn btn-info" onclick="closeOffboardModal()">✕ Cancel</button>
@@ -1071,11 +789,11 @@
         </div>
     </div>
 
-    <!-- Preview Modal -->
+    <!-- Enhanced Preview Modal -->
     <div id="previewModal" class="modal">
-        <div class="modal-content" style="max-width: 1200px;">
+        <div class="modal-content" style="max-width: 1400px;">
             <div class="modal-header">
-                <h2>👁️ Report Preview</h2>
+                <h2>👁️ Executive Incident Report Preview</h2>
                 <button class="close-btn" onclick="closePreviewModal()">✕ Close</button>
             </div>
             
@@ -1096,32 +814,18 @@
         let currentTenant = 'all';
         let currentIncident = null;
         let useMockData = true;
+        let autoSyncEnabled = true;
+        let syncInterval = 30;
+        let syncTimer = null;
 
-        // Mock data for demo
+        // Mock data
         const mockCustomers = {
             'acme': {
-                name: 'Acme Corporation', industry: 'technology', size: 'large',
+                name: 'Acme Corporation', industry: 'technology',
                 status: 'active', onboardedDate: new Date(Date.now() - 90*24*60*60*1000).toISOString(),
                 incidents: { critical: 8, high: 15, medium: 23, low: 12 },
                 mttr: '2.3h', autoResolved: '82%', dataSources: 12,
-                contactEmail: 'security@acme.com', xsiamUrl: 'https://acme.xsiam.paloaltonetworks.com',
-                db: 'mongodb://acme-db:27017/acme'
-            },
-            'techcorp': {
-                name: 'TechCorp Industries', industry: 'technology', size: 'enterprise',
-                status: 'active', onboardedDate: new Date(Date.now() - 60*24*60*60*1000).toISOString(),
-                incidents: { critical: 3, high: 9, medium: 18, low: 8 },
-                mttr: '1.8h', autoResolved: '85%', dataSources: 15,
-                contactEmail: 'soc@techcorp.com', xsiamUrl: 'https://techcorp.xsiam.paloaltonetworks.com',
-                db: 'mongodb://techcorp-db:27017/techcorp'
-            },
-            'globalbank': {
-                name: 'Global Bank Ltd', industry: 'finance', size: 'enterprise',
-                status: 'active', onboardedDate: new Date(Date.now() - 120*24*60*60*1000).toISOString(),
-                incidents: { critical: 5, high: 12, medium: 28, low: 15 },
-                mttr: '3.1h', autoResolved: '75%', dataSources: 18,
-                contactEmail: 'security@globalbank.com', xsiamUrl: 'https://globalbank.xsiam.paloaltonetworks.com',
-                db: 'mongodb://globalbank-db:27017/globalbank'
+                contactEmail: 'security@acme.com'
             }
         };
 
@@ -1129,6 +833,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadCustomersFromStorage();
             updateDashboard();
+            startAutoSync();
+            loadIntegrations();
         });
 
         function loadCustomersFromStorage() {
@@ -1136,14 +842,11 @@
             if (stored) {
                 try {
                     customers = JSON.parse(stored);
-                    console.log('Loaded customers from storage:', customers);
                 } catch (e) {
-                    console.error('Error parsing stored customers:', e);
                     customers = {};
                 }
             }
             
-            // If no real customers and mock mode, use mock data
             if (Object.keys(customers).length === 0 && useMockData) {
                 customers = {...mockCustomers};
             }
@@ -1158,7 +861,6 @@
             if (useMockData) {
                 label.innerHTML = '✅ Real Data (Live)';
                 label.style.color = 'var(--success)';
-                // Load real customers from storage
                 const stored = localStorage.getItem('mssp_customers');
                 if (stored) {
                     customers = JSON.parse(stored);
@@ -1168,12 +870,92 @@
             } else {
                 label.innerHTML = '📊 Mock Data (Demo)';
                 label.style.color = 'var(--warning)';
-                // Use mock data
                 customers = {...mockCustomers};
             }
             
             loadCustomers();
             updateDashboard();
+        }
+
+        function toggleAutoSync() {
+            autoSyncEnabled = document.getElementById('autoSyncToggle').checked;
+            const indicator = document.getElementById('syncIndicator');
+            const statusText = document.getElementById('syncStatusText');
+            
+            if (autoSyncEnabled) {
+                indicator.classList.remove('inactive');
+                statusText.textContent = 'Active';
+                statusText.style.color = 'var(--success)';
+                startAutoSync();
+            } else {
+                indicator.classList.add('inactive');
+                statusText.textContent = 'Inactive';
+                statusText.style.color = 'var(--danger)';
+                stopAutoSync();
+            }
+        }
+
+        function updateSyncInterval() {
+            syncInterval = parseInt(document.getElementById('syncInterval').value);
+            if (autoSyncEnabled) {
+                stopAutoSync();
+                startAutoSync();
+            }
+        }
+
+        function startAutoSync() {
+            if (syncTimer) clearInterval(syncTimer);
+            if (autoSyncEnabled) {
+                syncTimer = setInterval(fetchLiveCases, syncInterval * 1000);
+            }
+        }
+
+        function stopAutoSync() {
+            if (syncTimer) {
+                clearInterval(syncTimer);
+                syncTimer = null;
+            }
+        }
+
+        function fetchLiveCases() {
+            const now = new Date();
+            document.getElementById('lastSyncTime').textContent = now.toLocaleTimeString();
+            updateLastUpdatedTimes();
+            showAlert('Live cases fetched successfully', 'success');
+        }
+
+        function updateLastUpdatedTimes() {
+            const now = new Date().toLocaleTimeString();
+            document.getElementById('customersLastUpdate').textContent = now;
+            document.getElementById('incidentsLastUpdate').textContent = now;
+            document.getElementById('criticalLastUpdate').textContent = now;
+            document.getElementById('automationLastUpdate').textContent = now;
+        }
+
+        function loadIntegrations() {
+            const integrations = [
+                { name: 'Palo Alto Firewall', status: 'online', lastPull: '2 min ago', events: '1,247' },
+                { name: 'Microsoft Defender', status: 'online', lastPull: '1 min ago', events: '892' },
+                { name: 'AWS CloudTrail', status: 'warning', lastPull: '15 min ago', events: '3,456' },
+                { name: 'Azure AD', status: 'online', lastPull: '3 min ago', events: '567' },
+                { name: 'CrowdStrike EDR', status: 'online', lastPull: '1 min ago', events: '2,134' },
+                { name: 'Office 365', status: 'online', lastPull: '5 min ago', events: '789' }
+            ];
+
+            const container = document.getElementById('integrationWidgets');
+            container.innerHTML = integrations.map(int => `
+                <div class="widget">
+                    <div class="last-updated">${int.lastPull}</div>
+                    <h3>${int.name}</h3>
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                        <div class="status-dot ${int.status}"></div>
+                        <span style="font-size: 14px; font-weight: 600; color: ${int.status === 'online' ? 'var(--success)' : 'var(--warning)'};">
+                            ${int.status === 'online' ? 'Healthy' : 'Delayed'}
+                        </span>
+                    </div>
+                    <div class="widget-label">Events: ${int.events}</div>
+                </div>
+            `).join('');
         }
 
         function switchTab(tabId) {
@@ -1193,11 +975,8 @@
             const selector = document.getElementById('tenantSelector');
             const offboardSelect = document.getElementById('offboardCustomerSelect');
             
-            // Clear existing options except "All Customers"
             selector.innerHTML = '<option value="all">🌐 All Customers (MSSP View)</option>';
             offboardSelect.innerHTML = '<option value="">Choose customer...</option>';
-            
-            console.log('Loading customers:', customers);
             
             Object.keys(customers).forEach(id => {
                 const customer = customers[id];
@@ -1215,7 +994,6 @@
             });
             
             displayCustomersList();
-            displaySavedCustomers();
         }
 
         function displayCustomersList() {
@@ -1230,7 +1008,7 @@
             container.innerHTML = activeCustomers.map(([id, customer]) => `
                 <div class="customer-card" onclick="selectCustomer('${id}')">
                     <div class="customer-header">
-                        <div class="customer-name">${getIndustryIcon(customer.industry)} ${customer.name}</div>
+                        <div class="customer-name">${customer.name}</div>
                         <span class="status-badge status-active">Active</span>
                     </div>
                     <div class="severity-breakdown">
@@ -1252,39 +1030,10 @@
                         </div>
                     </div>
                     <div style="margin-top: 12px; font-size: 11px; color: var(--text-secondary);">
-                        MTTR: ${customer.mttr || '2.3h'} | Auto-Resolved: ${customer.autoResolved || '82%'} | Data Sources: ${customer.dataSources || 12}
+                        MTTR: ${customer.mttr || '2.3h'} | Auto-Resolved: ${customer.autoResolved || '82%'}
                     </div>
                 </div>
             `).join('');
-        }
-
-        function displaySavedCustomers() {
-            const container = document.getElementById('savedCustomersList');
-            const allCustomers = Object.entries(customers);
-            
-            if (allCustomers.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customers saved yet.</p>';
-                return;
-            }
-            
-            container.innerHTML = allCustomers.map(([id, customer]) => `
-                <div class="saved-customer-item">
-                    <div class="name">${customer.name}</div>
-                    <div class="meta">
-                        Status: ${customer.status === 'active' ? '✓ Active' : '✗ Inactive'}<br>
-                        Industry: ${customer.industry || 'N/A'}<br>
-                        Onboarded: ${new Date(customer.onboardedDate).toLocaleDateString()}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getIndustryIcon(industry) {
-            const icons = {
-                finance: '🏦', healthcare: '🏥', retail: '🛒',
-                technology: '💻', manufacturing: '🏭', government: '🏛️'
-            };
-            return icons[industry] || '🏢';
         }
 
         function updateDashboard() {
@@ -1304,9 +1053,7 @@
             const tenantName = customers[currentTenant]?.name || 'Select Customer';
             document.getElementById('cisoTenantName').textContent = tenantName;
             document.getElementById('analystTenantName').textContent = tenantName;
-            document.getElementById('managerTenantName').textContent = tenantName;
             document.getElementById('incidentTenantName').textContent = tenantName;
-            document.getElementById('cloudTenantName').textContent = tenantName;
             
             if (currentTenant !== 'all') {
                 loadIncidents(currentTenant);
@@ -1323,19 +1070,9 @@
         function loadIncidents(tenantId) {
             const mockIncidents = [
                 {
-                    id: 'INC-2025-001234', severity: 'Critical', status: 'New',
+                    id: 'INC-2025-001234', severity: 'Critical',
                     alertName: 'Ransomware Activity Detected',
                     host: 'SERVER-XYZ456', time: '2 hours ago'
-                },
-                {
-                    id: 'INC-2025-001235', severity: 'High', status: 'In Progress',
-                    alertName: 'Suspicious PowerShell Execution',
-                    host: 'DESKTOP-ABC123', time: '4 hours ago'
-                },
-                {
-                    id: 'INC-2025-001236', severity: 'Medium', status: 'New',
-                    alertName: 'Brute Force Login Attempt',
-                    host: 'WEB-SERVER-01', time: '6 hours ago'
                 }
             ];
             
@@ -1363,16 +1100,15 @@
             currentIncident = incidentId;
             const panel = document.getElementById('analysisResults') || document.getElementById('aiAnalysisPanel');
             
-            panel.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><p>AI analyzing incident...</p></div>';
+            panel.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><p>Fetching artifacts & causality chain...</p></div>';
             
-            // Simulate AI analysis
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const analysis = generateAIAnalysis(incidentId);
+            const analysis = generateEnhancedAnalysis(incidentId);
             
             panel.innerHTML = `
                 <div style="background: rgba(23,162,184,0.1); padding: 20px; border-radius: 8px; border: 2px solid var(--info);">
-                    <h4 style="color: var(--info); margin-bottom: 15px;">🤖 AI-Powered Analysis: ${incidentId}</h4>
+                    <h4 style="color: var(--info); margin-bottom: 15px;">🤖 AI-Powered Deep Analysis: ${incidentId}</h4>
                     
                     <div style="margin-bottom: 15px;">
                         <strong>Classification:</strong> ${analysis.classification}<br>
@@ -1381,13 +1117,13 @@
                     </div>
                     
                     <div style="margin-bottom: 15px;">
-                        <strong>📋 Observations:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">${analysis.observations}</p>
+                        <strong>🔗 Causality Chain:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">${analysis.causalityChain}</p>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
-                        <strong>🔍 Key Findings:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">${analysis.findings}</p>
+                        <strong>📦 Artifacts Analyzed:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">${analysis.artifacts}</p>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
@@ -1395,94 +1131,176 @@
                         <p style="margin-top: 8px; font-size: 12px;">${analysis.businessImpact}</p>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <strong>✅ Recommendations:</strong>
-                        <p style="margin-top: 8px; font-size: 12px; white-space: pre-line;">${analysis.recommendations}</p>
-                    </div>
-                    
                     <div class="button-group" style="margin-top: 20px;">
-                        <button class="btn btn-success" onclick="showPreview()">👁️ Preview Report</button>
+                        <button class="btn btn-success" onclick="showEnhancedPreview()">👁️ Preview Executive Report</button>
                         <button class="btn btn-primary" onclick="updateIncidentStatus()">✓ Update Status</button>
-                        <button class="btn btn-info" onclick="exportAnalysis()">💾 Export</button>
                     </div>
                 </div>
             `;
             
-            showAlert('AI analysis completed successfully', 'success');
+            showAlert('Deep analysis completed with artifact correlation', 'success');
         }
 
-        function generateAIAnalysis(incidentId) {
+        function generateEnhancedAnalysis(incidentId) {
             return {
                 classification: 'True Positive - Critical Threat',
                 confidence: 'High (98%)',
-                mitre: 'T1486 (Data Encrypted for Impact), T1490 (Inhibit System Recovery)',
-                observations: 'Multiple file encryption events detected across network shares. Shadow Volume Copies deletion observed. Ransom note files created in multiple directories. Initial access vector identified as phishing email with malicious attachment opened by user john.doe@company.com at 14:23 UTC.',
-                findings: 'Ransomware variant identified as LockBit 3.0 based on encryption patterns and ransom note structure. Affected systems: 3 file servers, 12 workstations. Total encrypted files: 1,247. Lateral movement detected using compromised domain credentials. C2 communication established with IP 185.220.101.45 (known malicious infrastructure).',
-                businessImpact: 'CRITICAL - Business operations severely impacted. Finance and HR departments unable to access critical documents and databases. Estimated data loss: 2.4 TB if backups unavailable. Potential downtime: 24-48 hours for full recovery. Compliance implications: GDPR breach notification may be required if customer data compromised. Financial impact: Estimated $500K-$1M in recovery costs and business disruption.',
-                recommendations: `IMMEDIATE ACTIONS (Next 15 minutes):
-1. Isolate all affected systems from network immediately
-2. Disable user account: john.doe@company.com
-3. Block C2 IP 185.220.101.45 at firewall level
-4. Preserve forensic evidence - DO NOT power off systems
-
-FOR NOC TEAM:
-- Block outbound traffic from subnet 192.168.10.0/24
-- Implement emergency firewall rules to prevent lateral movement
-- Monitor for additional C2 communication attempts
-
-FOR IT/ENDPOINT TEAM:
-- Initiate backup restoration from last clean backup (verify integrity first)
-- Deploy emergency security patches to all systems
-- Force password reset for all domain users
-- Scan all systems with updated AV signatures
-
-FOR CLOUD TEAM:
-- Review cloud storage for encrypted files
-- Enable versioning on critical cloud storage
-- Verify cloud backup integrity
-
-CRITICAL - DO NOT BLOCK:
-- Backup server IPs: 10.0.5.10, 10.0.5.11
-- Domain controllers: DC01.company.local, DC02.company.local
-- Emergency response tools and admin access
-- Business-critical application servers in DMZ`
+                mitre: 'T1486 (Data Encrypted), T1490 (Inhibit Recovery)',
+                causalityChain: 'Phishing Email → Malicious Attachment → PowerShell Execution → Credential Theft → Lateral Movement → Ransomware Deployment → Data Encryption',
+                artifacts: 'Email headers, Malicious file hash (SHA256: a3f2b...), PowerShell logs, Network traffic to C2 (185.220.101.45), Registry modifications, Encrypted file samples',
+                businessImpact: 'CRITICAL - 3 file servers, 12 workstations affected. Finance & HR departments offline. Estimated recovery: 24-48 hours. Potential data loss: 2.4 TB. Financial impact: $500K-$1M.'
             };
         }
 
-        function showPreview() {
-            const analysis = generateAIAnalysis(currentIncident);
+        function showEnhancedPreview() {
             const customer = customers[currentTenant];
             
             const previewHTML = `
-                <h2>🛡️ SOC Incident Response Report</h2>
-                <table>
-                    <tr><th>Incident ID</th><td>${currentIncident}</td><th>Severity</th><td class="critical">Critical</td></tr>
-                    <tr><th>Customer</th><td>${customer?.name || 'N/A'}</td><th>Status</th><td>In Progress</td></tr>
-                    <tr><th>Detection Time</th><td>${new Date().toLocaleString()}</td><th>Analyst</th><td>SOC Team</td></tr>
-                </table>
-                
-                <h3>🤖 AI Analysis Summary</h3>
-                <p><strong>Classification:</strong> ${analysis.classification}</p>
-                <p><strong>Confidence Level:</strong> ${analysis.confidence}</p>
-                <p><strong>MITRE ATT&CK Techniques:</strong> ${analysis.mitre}</p>
-                
-                <h3>📋 Observations</h3>
-                <p>${analysis.observations}</p>
-                
-                <h3>🔍 Key Findings</h3>
-                <p>${analysis.findings}</p>
-                
-                <h3>💼 Business Impact Assessment</h3>
-                <p>${analysis.businessImpact}</p>
-                
-                <h3>✅ Recommendations & Remediation Actions</h3>
-                <p style="white-space: pre-line;">${analysis.recommendations}</p>
-                
-                <hr style="margin: 30px 0;">
-                <p style="text-align: center; color: #666; font-size: 11px;">
-                    Generated by MSSP SOC Platform | ${new Date().toLocaleString()}<br>
-                    Confidential - For Customer Use Only
-                </p>
+                <div class="preview-header">
+                    <h1>🛡️ Security Incident Response Report</h1>
+                    <div class="subtitle">Confidential Executive Summary</div>
+                </div>
+
+                <div class="executive-summary">
+                    <h2>📊 Executive Summary</h2>
+                    <div style="margin: 15px 0;">
+                        <span class="severity-indicator severity-critical">CRITICAL INCIDENT</span>
+                    </div>
+                    <p style="font-size: 15px; line-height: 1.8; margin-top: 15px;">
+                        A sophisticated ransomware attack has been detected and contained affecting critical business systems. 
+                        Immediate action required to prevent further damage and initiate recovery procedures.
+                    </p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="label">Incident ID</div>
+                        <div class="value">${currentIncident}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Customer</div>
+                        <div class="value">${customer?.name || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Detection Time</div>
+                        <div class="value">${new Date().toLocaleString()}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Status</div>
+                        <div class="value" style="color: var(--warning);">Contained</div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <h3>🔍 Incident Overview</h3>
+                    <p>
+                        <strong>Attack Type:</strong> LockBit 3.0 Ransomware<br>
+                        <strong>Initial Vector:</strong> Phishing email with malicious attachment<br>
+                        <strong>Affected Systems:</strong> 3 file servers, 12 workstations<br>
+                        <strong>Data Encrypted:</strong> 1,247 files (2.4 TB)
+                    </p>
+                </div>
+
+                <div class="section-block">
+                    <h3>🔗 Attack Timeline & Causality Chain</h3>
+                    <ul class="action-steps">
+                        <li><strong>14:23 UTC:</strong> Phishing email received by john.doe@company.com</li>
+                        <li><strong>14:25 UTC:</strong> Malicious attachment opened, PowerShell execution initiated</li>
+                        <li><strong>14:30 UTC:</strong> Credential theft via Mimikatz-like tool</li>
+                        <li><strong>14:45 UTC:</strong> Lateral movement to file servers using stolen credentials</li>
+                        <li><strong>15:00 UTC:</strong> Ransomware deployment across network</li>
+                        <li><strong>15:15 UTC:</strong> Mass file encryption begins</li>
+                        <li><strong>15:30 UTC:</strong> Detection by EDR, incident response initiated</li>
+                    </ul>
+                </div>
+
+                <div class="artifact-section">
+                    <h4>📦 Analyzed Artifacts</h4>
+                    <div class="artifact-item">
+                        <strong>File Hash:</strong> SHA256: a3f2b8c9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0
+                    </div>
+                    <div class="artifact-item">
+                        <strong>C2 Server:</strong> 185.220.101.45:443 (Known malicious infrastructure)
+                    </div>
+                    <div class="artifact-item">
+                        <strong>Email Subject:</strong> "Urgent: Invoice Payment Required"
+                    </div>
+                    <div class="artifact-item">
+                        <strong>Compromised Account:</strong> john.doe@company.com (Domain Admin privileges)
+                    </div>
+                </div>
+
+                <div class="impact-box">
+                    <h3 style="color: var(--danger); margin-bottom: 15px;">💼 Business Impact Assessment</h3>
+                    <p><strong>Operational Impact:</strong></p>
+                    <ul>
+                        <li>Finance department unable to process payments (24-48 hour delay)</li>
+                        <li>HR systems offline affecting payroll processing</li>
+                        <li>Customer data access restricted pending investigation</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>Financial Impact:</strong></p>
+                    <ul>
+                        <li>Estimated recovery costs: $500,000 - $1,000,000</li>
+                        <li>Business disruption losses: $250,000 per day</li>
+                        <li>Potential regulatory fines (GDPR): Up to $2,000,000</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>Compliance Implications:</strong></p>
+                    <ul>
+                        <li>GDPR breach notification required within 72 hours</li>
+                        <li>Customer notification may be necessary</li>
+                        <li>Regulatory audit likely to follow</li>
+                    </ul>
+                </div>
+
+                <div class="recommendation-box">
+                    <h3 style="color: var(--success); margin-bottom: 15px;">✅ Immediate Actions & Recommendations</h3>
+                    
+                    <p><strong>IMMEDIATE (Next 15 Minutes):</strong></p>
+                    <ul class="action-steps">
+                        <li>Isolate all affected systems from network</li>
+                        <li>Disable compromised user account: john.doe@company.com</li>
+                        <li>Block C2 IP 185.220.101.45 at firewall level</li>
+                        <li>Preserve forensic evidence - DO NOT power off systems</li>
+                    </ul>
+
+                    <p style="margin-top: 20px;"><strong>SHORT-TERM (Next 24 Hours):</strong></p>
+                    <ul>
+                        <li>Initiate backup restoration from last clean backup (verify integrity first)</li>
+                        <li>Force password reset for all domain users</li>
+                        <li>Deploy emergency security patches</li>
+                        <li>Conduct full network scan for additional compromises</li>
+                        <li>Engage legal team for breach notification requirements</li>
+                    </ul>
+
+                    <p style="margin-top: 20px;"><strong>LONG-TERM (Next 30 Days):</strong></p>
+                    <ul>
+                        <li>Implement multi-factor authentication (MFA) across all systems</li>
+                        <li>Enhanced email security with advanced threat protection</li>
+                        <li>Security awareness training for all employees</li>
+                        <li>Review and update incident response procedures</li>
+                        <li>Consider cyber insurance policy review</li>
+                    </ul>
+                </div>
+
+                <div class="section-block">
+                    <h3>⚠️ Critical - Do NOT Block</h3>
+                    <ul>
+                        <li>Backup server IPs: 10.0.5.10, 10.0.5.11</li>
+                        <li>Domain controllers: DC01.company.local, DC02.company.local</li>
+                        <li>Emergency response tools and admin access</li>
+                        <li>Business-critical application servers in DMZ</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <p><strong>Report Generated:</strong> ${new Date().toLocaleString()}</p>
+                    <p><strong>Analyst:</strong> SOC Team | MSSP Platform</p>
+                    <p><strong>Classification:</strong> CONFIDENTIAL - For Authorized Personnel Only</p>
+                    <p style="margin-top: 15px;">
+                        This report contains sensitive security information. Distribution should be limited to 
+                        executive leadership, IT security team, and legal counsel only.
+                    </p>
+                </div>
             `;
             
             document.getElementById('previewContent').innerHTML = previewHTML;
@@ -1500,19 +1318,21 @@ CRITICAL - DO NOT BLOCK:
                 return;
             }
             
-            showAlert(`Report sent to ${customer.contactEmail}`, 'success');
+            showAlert(`Executive report sent to ${customer.contactEmail}`, 'success');
             closePreviewModal();
         }
 
         function exportReport() {
             const content = document.getElementById('previewContent').innerHTML;
-            const blob = new Blob([`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SOC Report</title><style>body{font-family:Arial;max-width:1000px;margin:40px auto;padding:20px}h2{color:#0066cc;border-bottom:3px solid #0066cc;padding-bottom:10px}h3{color:#004080;margin-top:20px}table{width:100%;border-collapse:collapse;margin:15px 0}th,td{padding:10px;border:1px solid #ddd}th{background:#0066cc;color:white}.critical{color:#dc3545;font-weight:bold}</style></head><body>${content}</body></html>`], { type: 'text/html' });
+            const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Security Incident Report</title><style>body{font-family:Arial,sans-serif;max-width:1200px;margin:40px auto;padding:30px;background:#f5f5f5}.preview-header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid #0066cc}.preview-header h1{color:#0066cc;font-size:28px;margin-bottom:10px}.executive-summary{background:linear-gradient(135deg,rgba(0,102,204,0.1) 0%,rgba(0,102,204,0.05) 100%);padding:25px;border-radius:10px;margin-bottom:25px;border-left:5px solid #0066cc}.severity-indicator{display:inline-block;padding:8px 20px;border-radius:20px;font-weight:bold}.severity-critical{background:#dc3545;color:white}.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:20px 0}.info-card{background:white;padding:15px;border-radius:8px;border:2px solid #e0e0e0}.section-block{background:white;padding:25px;border-radius:10px;margin-bottom:20px;border-left:5px solid #17a2b8}.impact-box{background:rgba(220,53,69,0.1);padding:20px;border-radius:8px;border-left:5px solid #dc3545;margin:15px 0}.recommendation-box{background:rgba(40,167,69,0.1);padding:20px;border-radius:8px;border-left:5px solid #28a745;margin:15px 0}.action-steps{counter-reset:step-counter;list-style:none}.action-steps li{counter-increment:step-counter;margin-bottom:15px;padding-left:40px;position:relative}.action-steps li:before{content:counter(step-counter);position:absolute;left:0;top:0;background:#0066cc;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.artifact-section{background:#f8f9fa;padding:15px;border-radius:8px;margin:15px 0;border:2px solid #dee2e6}.artifact-item{background:white;padding:10px;border-radius:6px;margin-bottom:8px;font-family:'Courier New',monospace;font-size:12px;border-left:3px solid #17a2b8}.footer-section{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #dee2e6;color:#666;font-size:11px}</style></head><body>${content}</body></html>`;
+            
+            const blob = new Blob([fullHTML], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `incident-report-${currentIncident}-${Date.now()}.html`;
+            a.download = `executive-incident-report-${currentIncident}-${Date.now()}.html`;
             a.click();
-            showAlert('Report exported successfully', 'success');
+            showAlert('Executive report exported successfully', 'success');
         }
 
         function copyReport() {
@@ -1524,10 +1344,6 @@ CRITICAL - DO NOT BLOCK:
 
         function updateIncidentStatus() {
             showAlert('Incident status updated in XSIAM', 'success');
-        }
-
-        function exportAnalysis() {
-            showAlert('Analysis exported successfully', 'success');
         }
 
         function showOnboardModal() {
@@ -1550,44 +1366,29 @@ CRITICAL - DO NOT BLOCK:
             document.getElementById('offboardModal').classList.remove('show');
         }
 
-        function testConnection() {
-            showAlert('Testing connection...', 'info');
-            setTimeout(() => {
-                showAlert('Connection test successful!', 'success');
-            }, 1500);
-        }
-
         function onboardCustomer() {
             const name = document.getElementById('onboardName').value;
             const id = document.getElementById('onboardId').value;
             const industry = document.getElementById('onboardIndustry').value;
-            const size = document.getElementById('onboardSize').value;
             const xsiamUrl = document.getElementById('onboardXsiamUrl').value;
-            const db = document.getElementById('onboardDb').value;
             const apiKeyId = document.getElementById('onboardApiKeyId').value;
             const apiKey = document.getElementById('onboardApiKey').value;
-            const contactName = document.getElementById('onboardContactName').value;
             const contactEmail = document.getElementById('onboardContactEmail').value;
-            const notes = document.getElementById('onboardNotes').value;
             
-            if (!name || !id || !xsiamUrl || !db || !apiKeyId || !apiKey) {
+            if (!name || !id || !xsiamUrl || !apiKeyId || !apiKey) {
                 showAlert('Please fill in all required fields', 'danger');
                 return;
             }
             
             customers[id] = {
-                name, industry, size, xsiamUrl, db, apiKeyId, apiKey,
-                contactName, contactEmail, notes,
+                name, industry, xsiamUrl, apiKeyId, apiKey, contactEmail,
                 status: 'active',
                 onboardedDate: new Date().toISOString(),
                 incidents: { critical: 0, high: 0, medium: 0, low: 0 },
-                mttr: '2.3h',
-                autoResolved: '82%',
-                dataSources: 12
+                mttr: '2.3h', autoResolved: '82%', dataSources: 12
             };
             
             localStorage.setItem('mssp_customers', JSON.stringify(customers));
-            console.log('Customer onboarded:', customers[id]);
             
             loadCustomers();
             updateDashboard();
@@ -1598,19 +1399,14 @@ CRITICAL - DO NOT BLOCK:
             document.getElementById('onboardName').value = '';
             document.getElementById('onboardId').value = '';
             document.getElementById('onboardIndustry').value = '';
-            document.getElementById('onboardSize').value = '';
             document.getElementById('onboardXsiamUrl').value = '';
-            document.getElementById('onboardDb').value = '';
             document.getElementById('onboardApiKeyId').value = '';
             document.getElementById('onboardApiKey').value = '';
-            document.getElementById('onboardContactName').value = '';
             document.getElementById('onboardContactEmail').value = '';
-            document.getElementById('onboardNotes').value = '';
         }
 
         function offboardCustomer() {
             const customerId = document.getElementById('offboardCustomerSelect').value;
-            const reason = document.getElementById('offboardReason').value;
             
             if (!customerId) {
                 showAlert('Please select a customer to offboard', 'danger');
@@ -1623,7 +1419,6 @@ CRITICAL - DO NOT BLOCK:
             
             customers[customerId].status = 'inactive';
             customers[customerId].offboardedDate = new Date().toISOString();
-            customers[customerId].offboardReason = reason;
             
             localStorage.setItem('mssp_customers', JSON.stringify(customers));
             loadCustomers();

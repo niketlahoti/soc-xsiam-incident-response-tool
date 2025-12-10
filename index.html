@@ -189,11 +189,6 @@
             border: 1px solid var(--success);
         }
         
-        .status-inactive {
-            background: rgba(220,53,69,0.2); color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-        
         .form-section {
             background: var(--card-bg); padding: 18px; border-radius: 8px;
             margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -201,28 +196,6 @@
         
         .form-section h3 {
             margin-bottom: 12px; color: var(--primary); font-size: 15px;
-        }
-        
-        .form-group { margin-bottom: 12px; }
-        
-        .form-group label {
-            display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;
-        }
-        
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 9px; background: var(--dark-bg);
-            border: 2px solid var(--border); border-radius: 6px;
-            color: var(--text-primary); font-size: 12px;
-        }
-        
-        .form-group textarea {
-            min-height: 90px; resize: vertical; font-family: 'Courier New', monospace;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
         }
         
         .btn {
@@ -234,7 +207,6 @@
         
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: #000; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-info { background: var(--info); color: white; }
         
@@ -243,19 +215,14 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
-        .button-group {
-            display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;
-        }
-        
         .alert {
             padding: 10px 15px; border-radius: 6px; margin-bottom: 12px;
-            display: none; animation: slideIn 0.3s ease;
+            display: none; animation: slideIn 0.3s ease; font-size: 12px;
         }
         
         .alert.show { display: block; }
         .alert-success { background: rgba(40,167,69,0.2); border-left: 4px solid var(--success); }
         .alert-danger { background: rgba(220,53,69,0.2); border-left: 4px solid var(--danger); }
-        .alert-warning { background: rgba(255,193,7,0.2); border-left: 4px solid var(--warning); }
         .alert-info { background: rgba(23,162,184,0.2); border-left: 4px solid var(--info); }
         
         .two-column {
@@ -273,197 +240,6 @@
             background: rgba(255,255,255,0.1); transform: translateX(5px);
         }
         
-        .incident-card.selected {
-            border-left-color: var(--success);
-            background: rgba(40,167,69,0.1);
-        }
-        
-        .kpi-card {
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0,102,204,0.1) 100%);
-            padding: 18px; border-radius: 8px; text-align: center;
-            border: 2px solid var(--border);
-        }
-        
-        .kpi-value {
-            font-size: 36px; font-weight: bold; color: var(--primary);
-            margin-bottom: 5px;
-        }
-        
-        .kpi-label {
-            font-size: 12px; color: var(--text-secondary);
-            text-transform: uppercase;
-        }
-        
-        .kpi-trend { font-size: 11px; margin-top: 6px; }
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--danger); }
-        
-        .modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            z-index: 1000; align-items: center; justify-content: center;
-            overflow-y: auto; padding: 20px;
-        }
-        
-        .modal.show { display: flex; }
-        
-        .modal-content {
-            background: var(--card-bg); padding: 25px; border-radius: 10px;
-            max-width: 900px; width: 100%; max-height: 90vh;
-            overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-        
-        .modal-header {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 20px;
-            padding-bottom: 15px; border-bottom: 2px solid var(--border);
-        }
-        
-        .modal-header h2 { color: var(--primary); font-size: 18px; }
-        
-        .close-btn {
-            background: var(--danger); color: white; border: none;
-            padding: 6px 12px; border-radius: 6px; cursor: pointer;
-            font-size: 12px; font-weight: 600;
-        }
-        
-        .preview-section {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            color: #000; padding: 40px;
-            border-radius: 12px; margin-top: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            border: 3px solid var(--primary);
-        }
-        
-        .preview-header {
-            text-align: center; margin-bottom: 30px;
-            padding-bottom: 20px; border-bottom: 3px solid var(--primary);
-        }
-        
-        .preview-header h1 {
-            color: var(--primary); font-size: 28px; margin-bottom: 10px;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        
-        .preview-header .subtitle {
-            color: #666; font-size: 14px; font-style: italic;
-        }
-        
-        .executive-summary {
-            background: linear-gradient(135deg, rgba(0,102,204,0.1) 0%, rgba(0,102,204,0.05) 100%);
-            padding: 25px; border-radius: 10px; margin-bottom: 25px;
-            border-left: 5px solid var(--primary);
-        }
-        
-        .executive-summary h2 {
-            color: var(--primary); font-size: 20px; margin-bottom: 15px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        
-        .severity-indicator {
-            display: inline-block; padding: 8px 20px; border-radius: 20px;
-            font-weight: bold; font-size: 14px; text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .severity-critical {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white; box-shadow: 0 4px 12px rgba(220,53,69,0.4);
-        }
-        
-        .info-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; margin: 20px 0;
-        }
-        
-        .info-card {
-            background: white; padding: 15px; border-radius: 8px;
-            border: 2px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .info-card .label {
-            font-size: 11px; color: #666; text-transform: uppercase;
-            font-weight: 600; margin-bottom: 5px;
-        }
-        
-        .info-card .value {
-            font-size: 16px; color: #000; font-weight: bold;
-        }
-        
-        .section-block {
-            background: white; padding: 25px; border-radius: 10px;
-            margin-bottom: 20px; border-left: 5px solid var(--info);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .section-block h3 {
-            color: var(--secondary); font-size: 18px; margin-bottom: 15px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        
-        .section-block p, .section-block ul {
-            color: #333; font-size: 14px; line-height: 1.8;
-        }
-        
-        .section-block ul {
-            margin-left: 20px; margin-top: 10px;
-        }
-        
-        .section-block li {
-            margin-bottom: 8px;
-        }
-        
-        .impact-box {
-            background: linear-gradient(135deg, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0.05) 100%);
-            padding: 20px; border-radius: 8px; border-left: 5px solid var(--danger);
-            margin: 15px 0;
-        }
-        
-        .recommendation-box {
-            background: linear-gradient(135deg, rgba(40,167,69,0.1) 0%, rgba(40,167,69,0.05) 100%);
-            padding: 20px; border-radius: 8px; border-left: 5px solid var(--success);
-            margin: 15px 0;
-        }
-        
-        .action-steps {
-            counter-reset: step-counter;
-            list-style: none; margin-left: 0;
-        }
-        
-        .action-steps li {
-            counter-increment: step-counter;
-            margin-bottom: 15px; padding-left: 40px; position: relative;
-        }
-        
-        .action-steps li:before {
-            content: counter(step-counter);
-            position: absolute; left: 0; top: 0;
-            background: var(--primary); color: white;
-            width: 28px; height: 28px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 14px;
-        }
-        
-        .artifact-section {
-            background: #f8f9fa; padding: 15px; border-radius: 8px;
-            margin: 15px 0; border: 2px solid #dee2e6;
-        }
-        
-        .artifact-section h4 {
-            color: var(--secondary); font-size: 14px; margin-bottom: 10px;
-        }
-        
-        .artifact-item {
-            background: white; padding: 10px; border-radius: 6px;
-            margin-bottom: 8px; font-family: 'Courier New', monospace;
-            font-size: 12px; border-left: 3px solid var(--info);
-        }
-        
-        .footer-section {
-            text-align: center; margin-top: 40px; padding-top: 20px;
-            border-top: 2px solid #dee2e6; color: #666; font-size: 11px;
-        }
-        
         .loading-spinner {
             display: inline-block; width: 18px; height: 18px;
             border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;
@@ -472,25 +248,10 @@
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .metric-row {
-            display: flex; justify-content: space-between; padding: 10px;
-            background: rgba(255,255,255,0.03); margin-bottom: 6px;
-            border-radius: 6px; font-size: 12px;
-        }
-        
-        .metric-label { font-weight: 600; }
-        .metric-value { font-weight: bold; color: var(--success); }
-        
         .data-source-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px; background: rgba(255,255,255,0.03);
             border-radius: 6px; margin-bottom: 6px; font-size: 12px;
-        }
-        
-        .source-name { font-weight: 600; }
-        
-        .source-status {
-            display: flex; align-items: center; gap: 6px;
         }
         
         .status-dot {
@@ -499,17 +260,9 @@
         
         .status-dot.online { background: var(--success); }
         .status-dot.offline { background: var(--danger); }
-        .status-dot.warning { background: var(--warning); }
         
         @media (max-width: 1200px) {
             .two-column { grid-template-columns: 1fr; }
-            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        }
-        
-        .data-mode-toggle {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 15px; background: rgba(255,255,255,0.05);
-            border-radius: 6px; margin-bottom: 15px;
         }
     </style>
 </head>
@@ -517,16 +270,15 @@
     <div class="container">
         <header>
             <div>
-                <h1>🛡️ MSSP SOC Platform - Enterprise Security Operations Center</h1>
-                <p>Multi-Tenant Security Operations | AI-Powered Analysis | Real-time Threat Intelligence</p>
+                <h1>🛡️ MSSP SOC Platform - ATPL NFR Environment</h1>
+                <p>Real-time XSIAM Integration | AI-Powered Analysis | Live Incident Monitoring</p>
             </div>
             <div class="tenant-controls">
                 <label style="font-weight: 600; font-size: 12px;">Customer:</label>
                 <select id="tenantSelector" onchange="switchTenant()">
-                    <option value="all">🌐 All Customers (MSSP View)</option>
+                    <option value="atpl-nfr">🏢 ATPL NFR (Default)</option>
                 </select>
                 <button class="btn btn-success" onclick="showOnboardModal()">➕ Onboard</button>
-                <button class="btn btn-danger" onclick="showOffboardModal()">➖ Offboard</button>
             </div>
         </header>
 
@@ -547,7 +299,6 @@
             <div style="display: flex; align-items: center; gap: 10px;">
                 <label style="font-size: 12px; font-weight: 600;">Interval:</label>
                 <select id="syncInterval" onchange="updateSyncInterval()" style="padding: 6px 10px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
-                    <option value="10">10 seconds</option>
                     <option value="30" selected>30 seconds</option>
                     <option value="60">1 minute</option>
                     <option value="120">2 minutes</option>
@@ -555,135 +306,73 @@
                 </select>
             </div>
             
-            <button class="btn btn-primary" onclick="fetchLiveCases()">🔄 Fetch Now</button>
+            <button class="btn btn-primary" onclick="fetchLiveCases()">🔄 Fetch Live Cases</button>
             
             <div style="font-size: 11px; color: var(--text-secondary);">
                 Last sync: <span id="lastSyncTime">Never</span>
             </div>
         </div>
 
-        <!-- Data Mode Toggle -->
-        <div class="data-mode-toggle">
-            <label style="font-weight: 600; font-size: 12px;">Data Mode:</label>
-            <label class="toggle-switch">
-                <input type="checkbox" id="dataModeToggle" onchange="toggleDataMode()">
-                <span class="slider"></span>
-            </label>
-            <span id="dataModeLabel" style="font-size: 12px; color: var(--warning);">📊 Mock Data (Demo)</span>
-        </div>
-
         <div class="tabs">
-            <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 MSSP Dashboard</button>
-            <button class="tab-button" onclick="switchTab('ciso-dashboard')">📊 CISO Dashboard</button>
-            <button class="tab-button" onclick="switchTab('analyst-view')">👨‍💻 Analyst Workspace</button>
+            <button class="tab-button active" onclick="switchTab('mssp-dashboard')">🌐 Dashboard</button>
             <button class="tab-button" onclick="switchTab('incidents')">🚨 Incidents</button>
             <button class="tab-button" onclick="switchTab('integrations')">🔌 Integrations</button>
-            <button class="tab-button" onclick="switchTab('customers')">👥 Customers</button>
         </div>
 
         <!-- MSSP Dashboard -->
         <div id="mssp-dashboard" class="tab-content active">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Multi-Tenant Security Overview</h2>
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">ATPL NFR - Security Overview</h2>
             
             <div class="dashboard-grid">
-                <div class="widget" onclick="navigateToCustomers()">
-                    <div class="last-updated" id="customersLastUpdate">Just now</div>
-                    <h3>Total Customers</h3>
-                    <div class="widget-value" id="totalCustomers">0</div>
-                    <div class="widget-label">Active Tenants</div>
-                </div>
-                <div class="widget" onclick="navigateToIncidents()">
-                    <div class="last-updated" id="incidentsLastUpdate">Just now</div>
+                <div class="widget">
+                    <div class="last-updated" id="incidentsLastUpdate">Loading...</div>
                     <h3>Total Incidents</h3>
-                    <div class="widget-value" id="totalIncidents">0</div>
-                    <div class="widget-label">Across All Customers</div>
-                </div>
-                <div class="widget" onclick="navigateToCritical()">
-                    <div class="last-updated" id="criticalLastUpdate">Just now</div>
-                    <h3>Critical Alerts</h3>
-                    <div class="widget-value critical" id="criticalAlerts">0</div>
-                    <div class="widget-label">Requires Immediate Action</div>
+                    <div class="widget-value" id="totalIncidents">-</div>
+                    <div class="widget-label">From XSIAM</div>
                 </div>
                 <div class="widget">
-                    <div class="last-updated" id="automationLastUpdate">Just now</div>
-                    <h3>Automation Rate</h3>
-                    <div class="widget-value" style="color: var(--success);" id="automationRate">0%</div>
-                    <div class="widget-label">Auto-Resolved Cases</div>
+                    <div class="last-updated" id="criticalLastUpdate">Loading...</div>
+                    <h3>Critical Alerts</h3>
+                    <div class="widget-value critical" id="criticalAlerts">-</div>
+                    <div class="widget-label">High Priority</div>
+                </div>
+                <div class="widget">
+                    <div class="last-updated" id="highLastUpdate">Loading...</div>
+                    <h3>High Severity</h3>
+                    <div class="widget-value high" id="highAlerts">-</div>
+                    <div class="widget-label">Requires Attention</div>
+                </div>
+                <div class="widget">
+                    <div class="last-updated" id="mediumLastUpdate">Loading...</div>
+                    <h3>Medium Severity</h3>
+                    <div class="widget-value medium" id="mediumAlerts">-</div>
+                    <div class="widget-label">Monitor</div>
                 </div>
             </div>
 
-            <h3 style="margin: 20px 0 12px; color: var(--primary); font-size: 16px;">Customer Tenants</h3>
+            <h3 style="margin: 20px 0 12px; color: var(--primary); font-size: 16px;">Active Customer</h3>
             <div id="customersList"></div>
-        </div>
-
-        <!-- CISO Dashboard -->
-        <div id="ciso-dashboard" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                CISO Executive Dashboard - <span id="cisoTenantName">Select Customer</span>
-            </h2>
-
-            <div class="dashboard-grid">
-                <div class="kpi-card">
-                    <div class="kpi-value">2.3h</div>
-                    <div class="kpi-label">Mean Time to Respond</div>
-                    <div class="kpi-trend trend-up">↓ 15% vs last month</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">82%</div>
-                    <div class="kpi-label">Auto-Resolved Rate</div>
-                    <div class="kpi-trend trend-up">↑ 8% improvement</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">94%</div>
-                    <div class="kpi-label">SOC Efficiency</div>
-                    <div class="kpi-trend trend-up">↑ 12% vs manual</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">78%</div>
-                    <div class="kpi-label">MITRE Coverage</div>
-                    <div class="kpi-trend trend-up">↑ 5% this quarter</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Analyst Workspace -->
-        <div id="analyst-view" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                SOC Analyst Workspace - <span id="analystTenantName">Select Customer</span>
-            </h2>
-
-            <div class="two-column">
-                <div class="form-section">
-                    <h3>📋 My Queue</h3>
-                    <div id="analystQueue" style="max-height: 600px; overflow-y: auto;"></div>
-                </div>
-
-                <div class="form-section">
-                    <h3>🤖 AI-Powered Analysis</h3>
-                    <div id="aiAnalysisPanel">
-                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            Select an incident to view AI analysis
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Incidents Tab -->
         <div id="incidents" class="tab-content">
             <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                Incident Management - <span id="incidentTenantName">Select Customer</span>
+                Live Incidents - ATPL NFR
             </h2>
             
             <div class="two-column">
                 <div class="form-section">
-                    <h3>📋 Open Incidents</h3>
+                    <h3>📋 Open Incidents (<span id="incidentCount">0</span>)</h3>
                     <div id="incidentsList" style="max-height: 600px; overflow-y: auto;"></div>
                 </div>
 
                 <div class="form-section">
-                    <h3>🤖 AI Analysis & Recommendations</h3>
-                    <div id="analysisResults"></div>
+                    <h3>🤖 AI Analysis & Details</h3>
+                    <div id="analysisResults">
+                        <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            Select an incident to view details
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -691,119 +380,65 @@
         <!-- Integrations Tab -->
         <div id="integrations" class="tab-content">
             <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">
-                Integration Health Monitor - <span id="integrationTenantName">All Customers</span>
+                Integration Health - ATPL NFR
             </h2>
 
-            <div class="dashboard-grid" id="integrationWidgets"></div>
-        </div>
-
-        <!-- Customers Tab -->
-        <div id="customers" class="tab-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;">Customer Management</h2>
-            
             <div class="form-section">
-                <h3>💼 Saved Customers</h3>
-                <div id="savedCustomersList" class="saved-customers-list"></div>
+                <h3>🔌 XSIAM Connection Status</h3>
+                <div class="data-source-item">
+                    <span style="font-weight: 600;">API Endpoint</span>
+                    <span style="font-size: 11px; font-family: monospace;">api-atpl-nfr.xdr.in.paloaltonetworks.com</span>
+                </div>
+                <div class="data-source-item">
+                    <span style="font-weight: 600;">Connection Status</span>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="status-dot" id="connectionStatus"></div>
+                        <span id="connectionStatusText">Checking...</span>
+                    </div>
+                </div>
+                <div class="data-source-item">
+                    <span style="font-weight: 600;">Last Successful Fetch</span>
+                    <span id="lastFetchTime">Never</span>
+                </div>
+                <div class="data-source-item">
+                    <span style="font-weight: 600;">Total Incidents Retrieved</span>
+                    <span id="totalRetrieved">0</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Onboard Modal (keeping existing) -->
-    <div id="onboardModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>➕ Onboard New Customer</h2>
-                <button class="close-btn" onclick="closeOnboardModal()">✕ Close</button>
+    <!-- Onboard Modal -->
+    <div id="onboardModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: var(--card-bg); padding: 25px; border-radius: 10px; max-width: 600px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border);">
+                <h2 style="color: var(--primary); font-size: 18px;">➕ Onboard New Customer</h2>
+                <button class="btn btn-danger" onclick="closeOnboardModal()">✕</button>
             </div>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Customer Name *</label>
-                    <input type="text" id="onboardName" placeholder="Acme Corporation">
-                </div>
-                <div class="form-group">
-                    <label>Tenant ID *</label>
-                    <input type="text" id="onboardId" placeholder="acme-corp">
-                </div>
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">Customer Name *</label>
+                <input type="text" id="onboardName" placeholder="Company Name" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Industry</label>
-                    <select id="onboardIndustry">
-                        <option value="">Select Industry</option>
-                        <option value="finance">Financial Services</option>
-                        <option value="healthcare">Healthcare</option>
-                        <option value="retail">Retail</option>
-                        <option value="technology">Technology</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>XSIAM Instance URL *</label>
-                    <input type="url" id="onboardXsiamUrl" placeholder="https://tenant.xsiam.paloaltonetworks.com">
-                </div>
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">XSIAM API URL *</label>
+                <input type="url" id="onboardXsiamUrl" placeholder="https://api-xxx.xdr.paloaltonetworks.com" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label>API Key ID *</label>
-                    <input type="text" id="onboardApiKeyId">
-                </div>
-                <div class="form-group">
-                    <label>API Key *</label>
-                    <input type="password" id="onboardApiKey">
-                </div>
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">API Key ID *</label>
+                <input type="text" id="onboardApiKeyId" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
             
-            <div class="form-group">
-                <label>Primary Contact Email</label>
-                <input type="email" id="onboardContactEmail" placeholder="security@company.com">
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px;">API Key *</label>
+                <input type="password" id="onboardApiKey" style="width: 100%; padding: 9px; background: var(--dark-bg); border: 2px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px;">
             </div>
             
-            <div class="button-group">
-                <button class="btn btn-success" onclick="onboardCustomer()">✓ Onboard Customer</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="onboardCustomer()">✓ Onboard</button>
                 <button class="btn btn-danger" onclick="closeOnboardModal()">✕ Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Offboard Modal (keeping existing) -->
-    <div id="offboardModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>➖ Offboard Customer</h2>
-                <button class="close-btn" onclick="closeOffboardModal()">✕ Close</button>
-            </div>
-            
-            <div class="form-group">
-                <label>Select Customer to Offboard *</label>
-                <select id="offboardCustomerSelect" style="width: 100%; padding: 10px;">
-                    <option value="">Choose customer...</option>
-                </select>
-            </div>
-            
-            <div class="button-group">
-                <button class="btn btn-danger" onclick="offboardCustomer()">➖ Offboard Customer</button>
-                <button class="btn btn-info" onclick="closeOffboardModal()">✕ Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Enhanced Preview Modal -->
-    <div id="previewModal" class="modal">
-        <div class="modal-content" style="max-width: 1400px;">
-            <div class="modal-header">
-                <h2>👁️ Executive Incident Report Preview</h2>
-                <button class="close-btn" onclick="closePreviewModal()">✕ Close</button>
-            </div>
-            
-            <div id="previewContent" class="preview-section"></div>
-            
-            <div class="button-group" style="margin-top: 20px;">
-                <button class="btn btn-success" onclick="sendToCustomer()">📧 Send to Customer</button>
-                <button class="btn btn-info" onclick="exportReport()">💾 Export HTML</button>
-                <button class="btn btn-warning" onclick="copyReport()">📋 Copy</button>
-                <button class="btn btn-danger" onclick="closePreviewModal()">✕ Close</button>
             </div>
         </div>
     </div>
@@ -811,33 +446,30 @@
     <script>
         // Global state
         let customers = {};
-        let currentTenant = 'all';
-        let currentIncident = null;
-        let useMockData = true;
+        let currentTenant = 'atpl-nfr';
         let autoSyncEnabled = true;
         let syncInterval = 30;
         let syncTimer = null;
+        let incidents = [];
 
-        // Mock data
-        const mockCustomers = {
-            'acme': {
-                name: 'Acme Corporation', industry: 'technology',
-                status: 'active', onboardedDate: new Date(Date.now() - 90*24*60*60*1000).toISOString(),
-                incidents: { critical: 8, high: 15, medium: 23, low: 12 },
-                mttr: '2.3h', autoResolved: '82%', dataSources: 12,
-                contactEmail: 'security@acme.com'
-            }
+        // Default ATPL NFR customer
+        const defaultCustomer = {
+            id: 'atpl-nfr',
+            name: 'ATPL NFR Environment',
+            apiUrl: 'https://api-atpl-nfr.xdr.in.paloaltonetworks.com',
+            apiKeyId: '10',
+            apiKey: 'gyljBCKp2NvQRlSHwOpeAl88wL3FMQXVuyUExKyJRGLW3jg3kARRW1281WcYJpDUccjK9PKtsHvCPQozcpEOXZxkib33qrF8IReyUnnyY2gLzOO1vezbez5ULh344VyA',
+            status: 'active',
+            onboardedDate: new Date().toISOString()
         };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadCustomersFromStorage();
-            updateDashboard();
-            startAutoSync();
-            loadIntegrations();
+            initializeApp();
         });
 
-        function loadCustomersFromStorage() {
+        function initializeApp() {
+            // Load customers from storage
             const stored = localStorage.getItem('mssp_customers');
             if (stored) {
                 try {
@@ -846,35 +478,17 @@
                     customers = {};
                 }
             }
-            
-            if (Object.keys(customers).length === 0 && useMockData) {
-                customers = {...mockCustomers};
-            }
-            
-            loadCustomers();
-        }
 
-        function toggleDataMode() {
-            useMockData = document.getElementById('dataModeToggle').checked;
-            const label = document.getElementById('dataModeLabel');
-            
-            if (useMockData) {
-                label.innerHTML = '✅ Real Data (Live)';
-                label.style.color = 'var(--success)';
-                const stored = localStorage.getItem('mssp_customers');
-                if (stored) {
-                    customers = JSON.parse(stored);
-                } else {
-                    customers = {};
-                }
-            } else {
-                label.innerHTML = '📊 Mock Data (Demo)';
-                label.style.color = 'var(--warning)';
-                customers = {...mockCustomers};
+            // Add default customer if not exists
+            if (!customers['atpl-nfr']) {
+                customers['atpl-nfr'] = defaultCustomer;
+                localStorage.setItem('mssp_customers', JSON.stringify(customers));
             }
-            
+
             loadCustomers();
-            updateDashboard();
+            displayCustomersList();
+            startAutoSync();
+            fetchLiveCases(); // Initial fetch
         }
 
         function toggleAutoSync() {
@@ -887,11 +501,13 @@
                 statusText.textContent = 'Active';
                 statusText.style.color = 'var(--success)';
                 startAutoSync();
+                showAlert('Auto-sync enabled', 'success');
             } else {
                 indicator.classList.add('inactive');
                 statusText.textContent = 'Inactive';
                 statusText.style.color = 'var(--danger)';
                 stopAutoSync();
+                showAlert('Auto-sync disabled', 'info');
             }
         }
 
@@ -900,6 +516,7 @@
             if (autoSyncEnabled) {
                 stopAutoSync();
                 startAutoSync();
+                showAlert(`Sync interval updated to ${syncInterval} seconds`, 'info');
             }
         }
 
@@ -917,45 +534,240 @@
             }
         }
 
-        function fetchLiveCases() {
+        async function fetchLiveCases() {
+            const customer = customers[currentTenant];
+            if (!customer) {
+                showAlert('No customer selected', 'danger');
+                return;
+            }
+
             const now = new Date();
             document.getElementById('lastSyncTime').textContent = now.toLocaleTimeString();
+            
+            try {
+                showAlert('Fetching live cases from XSIAM...', 'info');
+                
+                // XSIAM API endpoint for incidents
+                const apiUrl = `${customer.apiUrl}/public_api/v1/incidents/get_incidents/`;
+                
+                const requestBody = {
+                    request_data: {
+                        filters: [],
+                        search_from: 0,
+                        search_to: 100,
+                        sort: {
+                            field: "creation_time",
+                            keyword: "desc"
+                        }
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-xdr-auth-id': customer.apiKeyId,
+                        'Authorization': customer.apiKey
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.reply && data.reply.incidents) {
+                    incidents = data.reply.incidents;
+                    updateDashboard();
+                    displayIncidents();
+                    updateConnectionStatus(true);
+                    showAlert(`Successfully fetched ${incidents.length} incidents`, 'success');
+                    
+                    document.getElementById('lastFetchTime').textContent = now.toLocaleString();
+                    document.getElementById('totalRetrieved').textContent = incidents.length;
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Error fetching incidents:', error);
+                updateConnectionStatus(false);
+                showAlert(`Error: ${error.message}`, 'danger');
+            }
+
             updateLastUpdatedTimes();
-            showAlert('Live cases fetched successfully', 'success');
+        }
+
+        function updateConnectionStatus(isOnline) {
+            const statusDot = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('connectionStatusText');
+            
+            if (isOnline) {
+                statusDot.classList.add('online');
+                statusDot.classList.remove('offline');
+                statusText.textContent = 'Connected';
+                statusText.style.color = 'var(--success)';
+            } else {
+                statusDot.classList.add('offline');
+                statusDot.classList.remove('online');
+                statusText.textContent = 'Connection Failed';
+                statusText.style.color = 'var(--danger)';
+            }
+        }
+
+        function updateDashboard() {
+            const criticalCount = incidents.filter(i => i.severity === 'high' || i.severity === 'critical').length;
+            const highCount = incidents.filter(i => i.severity === 'high').length;
+            const mediumCount = incidents.filter(i => i.severity === 'medium').length;
+            
+            document.getElementById('totalIncidents').textContent = incidents.length;
+            document.getElementById('criticalAlerts').textContent = criticalCount;
+            document.getElementById('highAlerts').textContent = highCount;
+            document.getElementById('mediumAlerts').textContent = mediumCount;
+        }
+
+        function displayIncidents() {
+            const container = document.getElementById('incidentsList');
+            document.getElementById('incidentCount').textContent = incidents.length;
+            
+            if (incidents.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No incidents found</p>';
+                return;
+            }
+            
+            container.innerHTML = incidents.map(inc => {
+                const severityClass = inc.severity === 'high' || inc.severity === 'critical' ? 'critical' : 
+                                     inc.severity === 'medium' ? 'medium' : 'low';
+                const creationTime = new Date(inc.creation_time).toLocaleString();
+                
+                return `
+                    <div class="incident-card" onclick='showIncidentDetails(${JSON.stringify(inc).replace(/'/g, "&apos;")})'>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <strong>${inc.incident_id || 'N/A'}</strong>
+                            <span class="status-badge" style="background: rgba(220,53,69,0.2); color: var(--danger);">${inc.severity || 'Unknown'}</span>
+                        </div>
+                        <div style="font-size: 12px; margin-bottom: 5px;">${inc.description || inc.alert_sources?.[0] || 'No description'}</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">
+                            Created: ${creationTime} | Status: ${inc.status || 'Unknown'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showIncidentDetails(incident) {
+            const panel = document.getElementById('analysisResults');
+            
+            const creationTime = new Date(incident.creation_time).toLocaleString();
+            const modificationTime = incident.modification_time ? new Date(incident.modification_time).toLocaleString() : 'N/A';
+            
+            panel.innerHTML = `
+                <div style="background: rgba(23,162,184,0.1); padding: 20px; border-radius: 8px; border: 2px solid var(--info);">
+                    <h4 style="color: var(--info); margin-bottom: 15px;">📋 Incident Details: ${incident.incident_id}</h4>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <strong>Severity:</strong> <span class="${incident.severity === 'high' ? 'critical' : incident.severity}">${incident.severity || 'Unknown'}</span><br>
+                        <strong>Status:</strong> ${incident.status || 'Unknown'}<br>
+                        <strong>Created:</strong> ${creationTime}<br>
+                        <strong>Modified:</strong> ${modificationTime}
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <strong>📝 Description:</strong>
+                        <p style="margin-top: 8px; font-size: 12px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                            ${incident.description || 'No description available'}
+                        </p>
+                    </div>
+                    
+                    ${incident.alert_sources && incident.alert_sources.length > 0 ? `
+                    <div style="margin-bottom: 15px;">
+                        <strong>🔍 Alert Sources:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">
+                            ${incident.alert_sources.join(', ')}
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    ${incident.hosts && incident.hosts.length > 0 ? `
+                    <div style="margin-bottom: 15px;">
+                        <strong>💻 Affected Hosts:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">
+                            ${incident.hosts.join(', ')}
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    ${incident.users && incident.users.length > 0 ? `
+                    <div style="margin-bottom: 15px;">
+                        <strong>👤 Affected Users:</strong>
+                        <p style="margin-top: 8px; font-size: 12px;">
+                            ${incident.users.join(', ')}
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    <div style="margin-bottom: 15px;">
+                        <strong>📊 Additional Info:</strong>
+                        <p style="margin-top: 8px; font-size: 11px; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; max-height: 200px; overflow-y: auto;">
+                            ${JSON.stringify(incident, null, 2)}
+                        </p>
+                    </div>
+                </div>
+            `;
         }
 
         function updateLastUpdatedTimes() {
             const now = new Date().toLocaleTimeString();
-            document.getElementById('customersLastUpdate').textContent = now;
             document.getElementById('incidentsLastUpdate').textContent = now;
             document.getElementById('criticalLastUpdate').textContent = now;
-            document.getElementById('automationLastUpdate').textContent = now;
+            document.getElementById('highLastUpdate').textContent = now;
+            document.getElementById('mediumLastUpdate').textContent = now;
         }
 
-        function loadIntegrations() {
-            const integrations = [
-                { name: 'Palo Alto Firewall', status: 'online', lastPull: '2 min ago', events: '1,247' },
-                { name: 'Microsoft Defender', status: 'online', lastPull: '1 min ago', events: '892' },
-                { name: 'AWS CloudTrail', status: 'warning', lastPull: '15 min ago', events: '3,456' },
-                { name: 'Azure AD', status: 'online', lastPull: '3 min ago', events: '567' },
-                { name: 'CrowdStrike EDR', status: 'online', lastPull: '1 min ago', events: '2,134' },
-                { name: 'Office 365', status: 'online', lastPull: '5 min ago', events: '789' }
-            ];
+        function loadCustomers() {
+            const selector = document.getElementById('tenantSelector');
+            selector.innerHTML = '';
+            
+            Object.keys(customers).forEach(id => {
+                const customer = customers[id];
+                if (customer.status === 'active') {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = customer.name;
+                    if (id === 'atpl-nfr') {
+                        option.textContent = '🏢 ' + customer.name + ' (Default)';
+                    }
+                    selector.appendChild(option);
+                }
+            });
+            
+            selector.value = currentTenant;
+        }
 
-            const container = document.getElementById('integrationWidgets');
-            container.innerHTML = integrations.map(int => `
-                <div class="widget">
-                    <div class="last-updated">${int.lastPull}</div>
-                    <h3>${int.name}</h3>
-                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
-                        <div class="status-dot ${int.status}"></div>
-                        <span style="font-size: 14px; font-weight: 600; color: ${int.status === 'online' ? 'var(--success)' : 'var(--warning)'};">
-                            ${int.status === 'online' ? 'Healthy' : 'Delayed'}
-                        </span>
+        function displayCustomersList() {
+            const container = document.getElementById('customersList');
+            const customer = customers[currentTenant];
+            
+            if (!customer) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customer selected</p>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="customer-card">
+                    <div class="customer-header">
+                        <div class="customer-name">🏢 ${customer.name}</div>
+                        <span class="status-badge status-active">Active</span>
                     </div>
-                    <div class="widget-label">Events: ${int.events}</div>
+                    <div style="margin-top: 12px; font-size: 11px; color: var(--text-secondary);">
+                        <strong>API Endpoint:</strong> ${customer.apiUrl}<br>
+                        <strong>Onboarded:</strong> ${new Date(customer.onboardedDate).toLocaleDateString()}<br>
+                        <strong>Status:</strong> Connected to XSIAM
+                    </div>
                 </div>
-            `).join('');
+            `;
         }
 
         function switchTab(tabId) {
@@ -967,476 +779,53 @@
 
         function switchTenant() {
             currentTenant = document.getElementById('tenantSelector').value;
-            updateDashboard();
-            updateAllViews();
-        }
-
-        function loadCustomers() {
-            const selector = document.getElementById('tenantSelector');
-            const offboardSelect = document.getElementById('offboardCustomerSelect');
-            
-            selector.innerHTML = '<option value="all">🌐 All Customers (MSSP View)</option>';
-            offboardSelect.innerHTML = '<option value="">Choose customer...</option>';
-            
-            Object.keys(customers).forEach(id => {
-                const customer = customers[id];
-                if (customer.status === 'active') {
-                    const option = document.createElement('option');
-                    option.value = id;
-                    option.textContent = customer.name;
-                    selector.appendChild(option);
-                    
-                    const offOption = document.createElement('option');
-                    offOption.value = id;
-                    offOption.textContent = customer.name;
-                    offboardSelect.appendChild(offOption);
-                }
-            });
-            
             displayCustomersList();
-        }
-
-        function displayCustomersList() {
-            const container = document.getElementById('customersList');
-            const activeCustomers = Object.entries(customers).filter(([id, c]) => c.status === 'active');
-            
-            if (activeCustomers.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">No customers onboarded yet. Click "Onboard" to add your first customer or toggle to Mock Data to see demo.</p>';
-                return;
-            }
-            
-            container.innerHTML = activeCustomers.map(([id, customer]) => `
-                <div class="customer-card" onclick="selectCustomer('${id}')">
-                    <div class="customer-header">
-                        <div class="customer-name">${customer.name}</div>
-                        <span class="status-badge status-active">Active</span>
-                    </div>
-                    <div class="severity-breakdown">
-                        <div class="severity-item">
-                            <div class="count critical">${customer.incidents?.critical || 0}</div>
-                            <div class="label">Critical</div>
-                        </div>
-                        <div class="severity-item">
-                            <div class="count high">${customer.incidents?.high || 0}</div>
-                            <div class="label">High</div>
-                        </div>
-                        <div class="severity-item">
-                            <div class="count medium">${customer.incidents?.medium || 0}</div>
-                            <div class="label">Medium</div>
-                        </div>
-                        <div class="severity-item">
-                            <div class="count low">${customer.incidents?.low || 0}</div>
-                            <div class="label">Low</div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 12px; font-size: 11px; color: var(--text-secondary);">
-                        MTTR: ${customer.mttr || '2.3h'} | Auto-Resolved: ${customer.autoResolved || '82%'}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateDashboard() {
-            const activeCustomers = Object.values(customers).filter(c => c.status === 'active');
-            const totalIncidents = activeCustomers.reduce((sum, c) => 
-                sum + (c.incidents?.critical || 0) + (c.incidents?.high || 0) + 
-                (c.incidents?.medium || 0) + (c.incidents?.low || 0), 0);
-            const criticalCount = activeCustomers.reduce((sum, c) => sum + (c.incidents?.critical || 0), 0);
-            
-            document.getElementById('totalCustomers').textContent = activeCustomers.length;
-            document.getElementById('totalIncidents').textContent = totalIncidents;
-            document.getElementById('criticalAlerts').textContent = criticalCount;
-            document.getElementById('automationRate').textContent = '82%';
-        }
-
-        function updateAllViews() {
-            const tenantName = customers[currentTenant]?.name || 'Select Customer';
-            document.getElementById('cisoTenantName').textContent = tenantName;
-            document.getElementById('analystTenantName').textContent = tenantName;
-            document.getElementById('incidentTenantName').textContent = tenantName;
-            
-            if (currentTenant !== 'all') {
-                loadIncidents(currentTenant);
-            }
-        }
-
-        function selectCustomer(tenantId) {
-            currentTenant = tenantId;
-            document.getElementById('tenantSelector').value = tenantId;
-            updateAllViews();
-            switchTab('incidents');
-        }
-
-        function loadIncidents(tenantId) {
-            const mockIncidents = [
-                {
-                    id: 'INC-2025-001234', severity: 'Critical',
-                    alertName: 'Ransomware Activity Detected',
-                    host: 'SERVER-XYZ456', time: '2 hours ago'
-                }
-            ];
-            
-            const container = document.getElementById('incidentsList');
-            const queueContainer = document.getElementById('analystQueue');
-            
-            const html = mockIncidents.map(inc => `
-                <div class="incident-card" onclick="analyzeIncident('${inc.id}')">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <strong>${inc.id}</strong>
-                        <span class="status-badge" style="background: rgba(220,53,69,0.2); color: var(--danger);">${inc.severity}</span>
-                    </div>
-                    <div style="font-size: 12px;">${inc.alertName}</div>
-                    <div style="font-size: 10px; color: var(--text-secondary); margin-top: 5px;">
-                        Host: ${inc.host} | ${inc.time}
-                    </div>
-                </div>
-            `).join('');
-            
-            if (container) container.innerHTML = html;
-            if (queueContainer) queueContainer.innerHTML = html;
-        }
-
-        async function analyzeIncident(incidentId) {
-            currentIncident = incidentId;
-            const panel = document.getElementById('analysisResults') || document.getElementById('aiAnalysisPanel');
-            
-            panel.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><p>Fetching artifacts & causality chain...</p></div>';
-            
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const analysis = generateEnhancedAnalysis(incidentId);
-            
-            panel.innerHTML = `
-                <div style="background: rgba(23,162,184,0.1); padding: 20px; border-radius: 8px; border: 2px solid var(--info);">
-                    <h4 style="color: var(--info); margin-bottom: 15px;">🤖 AI-Powered Deep Analysis: ${incidentId}</h4>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <strong>Classification:</strong> ${analysis.classification}<br>
-                        <strong>Confidence:</strong> ${analysis.confidence}<br>
-                        <strong>MITRE ATT&CK:</strong> ${analysis.mitre}
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <strong>🔗 Causality Chain:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">${analysis.causalityChain}</p>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <strong>📦 Artifacts Analyzed:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">${analysis.artifacts}</p>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <strong>💼 Business Impact:</strong>
-                        <p style="margin-top: 8px; font-size: 12px;">${analysis.businessImpact}</p>
-                    </div>
-                    
-                    <div class="button-group" style="margin-top: 20px;">
-                        <button class="btn btn-success" onclick="showEnhancedPreview()">👁️ Preview Executive Report</button>
-                        <button class="btn btn-primary" onclick="updateIncidentStatus()">✓ Update Status</button>
-                    </div>
-                </div>
-            `;
-            
-            showAlert('Deep analysis completed with artifact correlation', 'success');
-        }
-
-        function generateEnhancedAnalysis(incidentId) {
-            return {
-                classification: 'True Positive - Critical Threat',
-                confidence: 'High (98%)',
-                mitre: 'T1486 (Data Encrypted), T1490 (Inhibit Recovery)',
-                causalityChain: 'Phishing Email → Malicious Attachment → PowerShell Execution → Credential Theft → Lateral Movement → Ransomware Deployment → Data Encryption',
-                artifacts: 'Email headers, Malicious file hash (SHA256: a3f2b...), PowerShell logs, Network traffic to C2 (185.220.101.45), Registry modifications, Encrypted file samples',
-                businessImpact: 'CRITICAL - 3 file servers, 12 workstations affected. Finance & HR departments offline. Estimated recovery: 24-48 hours. Potential data loss: 2.4 TB. Financial impact: $500K-$1M.'
-            };
-        }
-
-        function showEnhancedPreview() {
-            const customer = customers[currentTenant];
-            
-            const previewHTML = `
-                <div class="preview-header">
-                    <h1>🛡️ Security Incident Response Report</h1>
-                    <div class="subtitle">Confidential Executive Summary</div>
-                </div>
-
-                <div class="executive-summary">
-                    <h2>📊 Executive Summary</h2>
-                    <div style="margin: 15px 0;">
-                        <span class="severity-indicator severity-critical">CRITICAL INCIDENT</span>
-                    </div>
-                    <p style="font-size: 15px; line-height: 1.8; margin-top: 15px;">
-                        A sophisticated ransomware attack has been detected and contained affecting critical business systems. 
-                        Immediate action required to prevent further damage and initiate recovery procedures.
-                    </p>
-                </div>
-
-                <div class="info-grid">
-                    <div class="info-card">
-                        <div class="label">Incident ID</div>
-                        <div class="value">${currentIncident}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="label">Customer</div>
-                        <div class="value">${customer?.name || 'N/A'}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="label">Detection Time</div>
-                        <div class="value">${new Date().toLocaleString()}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="label">Status</div>
-                        <div class="value" style="color: var(--warning);">Contained</div>
-                    </div>
-                </div>
-
-                <div class="section-block">
-                    <h3>🔍 Incident Overview</h3>
-                    <p>
-                        <strong>Attack Type:</strong> LockBit 3.0 Ransomware<br>
-                        <strong>Initial Vector:</strong> Phishing email with malicious attachment<br>
-                        <strong>Affected Systems:</strong> 3 file servers, 12 workstations<br>
-                        <strong>Data Encrypted:</strong> 1,247 files (2.4 TB)
-                    </p>
-                </div>
-
-                <div class="section-block">
-                    <h3>🔗 Attack Timeline & Causality Chain</h3>
-                    <ul class="action-steps">
-                        <li><strong>14:23 UTC:</strong> Phishing email received by john.doe@company.com</li>
-                        <li><strong>14:25 UTC:</strong> Malicious attachment opened, PowerShell execution initiated</li>
-                        <li><strong>14:30 UTC:</strong> Credential theft via Mimikatz-like tool</li>
-                        <li><strong>14:45 UTC:</strong> Lateral movement to file servers using stolen credentials</li>
-                        <li><strong>15:00 UTC:</strong> Ransomware deployment across network</li>
-                        <li><strong>15:15 UTC:</strong> Mass file encryption begins</li>
-                        <li><strong>15:30 UTC:</strong> Detection by EDR, incident response initiated</li>
-                    </ul>
-                </div>
-
-                <div class="artifact-section">
-                    <h4>📦 Analyzed Artifacts</h4>
-                    <div class="artifact-item">
-                        <strong>File Hash:</strong> SHA256: a3f2b8c9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0
-                    </div>
-                    <div class="artifact-item">
-                        <strong>C2 Server:</strong> 185.220.101.45:443 (Known malicious infrastructure)
-                    </div>
-                    <div class="artifact-item">
-                        <strong>Email Subject:</strong> "Urgent: Invoice Payment Required"
-                    </div>
-                    <div class="artifact-item">
-                        <strong>Compromised Account:</strong> john.doe@company.com (Domain Admin privileges)
-                    </div>
-                </div>
-
-                <div class="impact-box">
-                    <h3 style="color: var(--danger); margin-bottom: 15px;">💼 Business Impact Assessment</h3>
-                    <p><strong>Operational Impact:</strong></p>
-                    <ul>
-                        <li>Finance department unable to process payments (24-48 hour delay)</li>
-                        <li>HR systems offline affecting payroll processing</li>
-                        <li>Customer data access restricted pending investigation</li>
-                    </ul>
-                    <p style="margin-top: 15px;"><strong>Financial Impact:</strong></p>
-                    <ul>
-                        <li>Estimated recovery costs: $500,000 - $1,000,000</li>
-                        <li>Business disruption losses: $250,000 per day</li>
-                        <li>Potential regulatory fines (GDPR): Up to $2,000,000</li>
-                    </ul>
-                    <p style="margin-top: 15px;"><strong>Compliance Implications:</strong></p>
-                    <ul>
-                        <li>GDPR breach notification required within 72 hours</li>
-                        <li>Customer notification may be necessary</li>
-                        <li>Regulatory audit likely to follow</li>
-                    </ul>
-                </div>
-
-                <div class="recommendation-box">
-                    <h3 style="color: var(--success); margin-bottom: 15px;">✅ Immediate Actions & Recommendations</h3>
-                    
-                    <p><strong>IMMEDIATE (Next 15 Minutes):</strong></p>
-                    <ul class="action-steps">
-                        <li>Isolate all affected systems from network</li>
-                        <li>Disable compromised user account: john.doe@company.com</li>
-                        <li>Block C2 IP 185.220.101.45 at firewall level</li>
-                        <li>Preserve forensic evidence - DO NOT power off systems</li>
-                    </ul>
-
-                    <p style="margin-top: 20px;"><strong>SHORT-TERM (Next 24 Hours):</strong></p>
-                    <ul>
-                        <li>Initiate backup restoration from last clean backup (verify integrity first)</li>
-                        <li>Force password reset for all domain users</li>
-                        <li>Deploy emergency security patches</li>
-                        <li>Conduct full network scan for additional compromises</li>
-                        <li>Engage legal team for breach notification requirements</li>
-                    </ul>
-
-                    <p style="margin-top: 20px;"><strong>LONG-TERM (Next 30 Days):</strong></p>
-                    <ul>
-                        <li>Implement multi-factor authentication (MFA) across all systems</li>
-                        <li>Enhanced email security with advanced threat protection</li>
-                        <li>Security awareness training for all employees</li>
-                        <li>Review and update incident response procedures</li>
-                        <li>Consider cyber insurance policy review</li>
-                    </ul>
-                </div>
-
-                <div class="section-block">
-                    <h3>⚠️ Critical - Do NOT Block</h3>
-                    <ul>
-                        <li>Backup server IPs: 10.0.5.10, 10.0.5.11</li>
-                        <li>Domain controllers: DC01.company.local, DC02.company.local</li>
-                        <li>Emergency response tools and admin access</li>
-                        <li>Business-critical application servers in DMZ</li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <p><strong>Report Generated:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>Analyst:</strong> SOC Team | MSSP Platform</p>
-                    <p><strong>Classification:</strong> CONFIDENTIAL - For Authorized Personnel Only</p>
-                    <p style="margin-top: 15px;">
-                        This report contains sensitive security information. Distribution should be limited to 
-                        executive leadership, IT security team, and legal counsel only.
-                    </p>
-                </div>
-            `;
-            
-            document.getElementById('previewContent').innerHTML = previewHTML;
-            document.getElementById('previewModal').classList.add('show');
-        }
-
-        function closePreviewModal() {
-            document.getElementById('previewModal').classList.remove('show');
-        }
-
-        function sendToCustomer() {
-            const customer = customers[currentTenant];
-            if (!customer || !customer.contactEmail) {
-                showAlert('Customer email not configured', 'warning');
-                return;
-            }
-            
-            showAlert(`Executive report sent to ${customer.contactEmail}`, 'success');
-            closePreviewModal();
-        }
-
-        function exportReport() {
-            const content = document.getElementById('previewContent').innerHTML;
-            const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Security Incident Report</title><style>body{font-family:Arial,sans-serif;max-width:1200px;margin:40px auto;padding:30px;background:#f5f5f5}.preview-header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid #0066cc}.preview-header h1{color:#0066cc;font-size:28px;margin-bottom:10px}.executive-summary{background:linear-gradient(135deg,rgba(0,102,204,0.1) 0%,rgba(0,102,204,0.05) 100%);padding:25px;border-radius:10px;margin-bottom:25px;border-left:5px solid #0066cc}.severity-indicator{display:inline-block;padding:8px 20px;border-radius:20px;font-weight:bold}.severity-critical{background:#dc3545;color:white}.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:20px 0}.info-card{background:white;padding:15px;border-radius:8px;border:2px solid #e0e0e0}.section-block{background:white;padding:25px;border-radius:10px;margin-bottom:20px;border-left:5px solid #17a2b8}.impact-box{background:rgba(220,53,69,0.1);padding:20px;border-radius:8px;border-left:5px solid #dc3545;margin:15px 0}.recommendation-box{background:rgba(40,167,69,0.1);padding:20px;border-radius:8px;border-left:5px solid #28a745;margin:15px 0}.action-steps{counter-reset:step-counter;list-style:none}.action-steps li{counter-increment:step-counter;margin-bottom:15px;padding-left:40px;position:relative}.action-steps li:before{content:counter(step-counter);position:absolute;left:0;top:0;background:#0066cc;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.artifact-section{background:#f8f9fa;padding:15px;border-radius:8px;margin:15px 0;border:2px solid #dee2e6}.artifact-item{background:white;padding:10px;border-radius:6px;margin-bottom:8px;font-family:'Courier New',monospace;font-size:12px;border-left:3px solid #17a2b8}.footer-section{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #dee2e6;color:#666;font-size:11px}</style></head><body>${content}</body></html>`;
-            
-            const blob = new Blob([fullHTML], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `executive-incident-report-${currentIncident}-${Date.now()}.html`;
-            a.click();
-            showAlert('Executive report exported successfully', 'success');
-        }
-
-        function copyReport() {
-            const content = document.getElementById('previewContent').innerText;
-            navigator.clipboard.writeText(content).then(() => {
-                showAlert('Report copied to clipboard', 'success');
-            });
-        }
-
-        function updateIncidentStatus() {
-            showAlert('Incident status updated in XSIAM', 'success');
+            fetchLiveCases();
         }
 
         function showOnboardModal() {
-            document.getElementById('onboardModal').classList.add('show');
+            document.getElementById('onboardModal').style.display = 'flex';
         }
 
         function closeOnboardModal() {
-            document.getElementById('onboardModal').classList.remove('show');
-        }
-
-        function showOffboardModal() {
-            if (Object.keys(customers).filter(k => customers[k].status === 'active').length === 0) {
-                showAlert('No active customers to offboard', 'warning');
-                return;
-            }
-            document.getElementById('offboardModal').classList.add('show');
-        }
-
-        function closeOffboardModal() {
-            document.getElementById('offboardModal').classList.remove('show');
+            document.getElementById('onboardModal').style.display = 'none';
         }
 
         function onboardCustomer() {
             const name = document.getElementById('onboardName').value;
-            const id = document.getElementById('onboardId').value;
-            const industry = document.getElementById('onboardIndustry').value;
-            const xsiamUrl = document.getElementById('onboardXsiamUrl').value;
+            const apiUrl = document.getElementById('onboardXsiamUrl').value;
             const apiKeyId = document.getElementById('onboardApiKeyId').value;
             const apiKey = document.getElementById('onboardApiKey').value;
-            const contactEmail = document.getElementById('onboardContactEmail').value;
             
-            if (!name || !id || !xsiamUrl || !apiKeyId || !apiKey) {
+            if (!name || !apiUrl || !apiKeyId || !apiKey) {
                 showAlert('Please fill in all required fields', 'danger');
                 return;
             }
             
+            const id = name.toLowerCase().replace(/\s+/g, '-');
+            
             customers[id] = {
-                name, industry, xsiamUrl, apiKeyId, apiKey, contactEmail,
+                id,
+                name,
+                apiUrl,
+                apiKeyId,
+                apiKey,
                 status: 'active',
-                onboardedDate: new Date().toISOString(),
-                incidents: { critical: 0, high: 0, medium: 0, low: 0 },
-                mttr: '2.3h', autoResolved: '82%', dataSources: 12
+                onboardedDate: new Date().toISOString()
             };
             
             localStorage.setItem('mssp_customers', JSON.stringify(customers));
             
             loadCustomers();
-            updateDashboard();
+            displayCustomersList();
             closeOnboardModal();
             showAlert(`Customer "${name}" onboarded successfully!`, 'success');
             
             // Clear form
             document.getElementById('onboardName').value = '';
-            document.getElementById('onboardId').value = '';
-            document.getElementById('onboardIndustry').value = '';
             document.getElementById('onboardXsiamUrl').value = '';
             document.getElementById('onboardApiKeyId').value = '';
             document.getElementById('onboardApiKey').value = '';
-            document.getElementById('onboardContactEmail').value = '';
-        }
-
-        function offboardCustomer() {
-            const customerId = document.getElementById('offboardCustomerSelect').value;
-            
-            if (!customerId) {
-                showAlert('Please select a customer to offboard', 'danger');
-                return;
-            }
-            
-            if (!confirm(`Are you sure you want to offboard ${customers[customerId].name}?`)) {
-                return;
-            }
-            
-            customers[customerId].status = 'inactive';
-            customers[customerId].offboardedDate = new Date().toISOString();
-            
-            localStorage.setItem('mssp_customers', JSON.stringify(customers));
-            loadCustomers();
-            updateDashboard();
-            closeOffboardModal();
-            showAlert(`Customer offboarded successfully`, 'success');
-        }
-
-        function navigateToCustomers() {
-            switchTab('customers');
-        }
-
-        function navigateToIncidents() {
-            switchTab('incidents');
-        }
-
-        function navigateToCritical() {
-            switchTab('incidents');
         }
 
         function showAlert(message, type) {
